@@ -13,6 +13,15 @@ module.exports = withMT( {
       fontFamily: {
         rubik: ["Rubik"],
       },
+      colors: {
+        "color-primary": "var(--color-primary)",
+        "color-primary-light": "var(--color-primary-light)",
+        "color-primary-dark": "var(--color-primary-dark)",
+        "color-white": "var(--text-white)",
+        "color-black": "var(--color-black)",
+        "color-black-light": "var(--color-black-light)",
+        
+      }
     },
   },
   plugins: [],

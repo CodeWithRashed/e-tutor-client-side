@@ -62,7 +62,7 @@ const Register = ({ setPageToggle }) => {
         navigator(location.state ? location.state : "/");
       }, 2000);
     } catch (error) {
-      toast.error("Login failed. Please try again.", {
+      toast.error("Register failed. Please try again.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: true,
@@ -98,7 +98,7 @@ const Register = ({ setPageToggle }) => {
         navigator(redirectPath);
       }, 2000);
     } catch (error) {
-      toast.error("Login failed. Please try again.", {
+      toast.error("Register failed. Please try again.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: true,

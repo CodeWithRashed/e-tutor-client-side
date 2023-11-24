@@ -21,6 +21,14 @@ export const router = createBrowserRouter([
         path: "/login",
         element: <AuthPage></AuthPage>,
       },
+      {
+        path: "/courses",
+        element: <div className="h-screen w-full flex justify-center items-center">Courses</div>,
+      },
+      {
+        path: "/become-instructor",
+        element: <div className="h-screen w-full flex justify-center items-center">become-instructor</div>,
+      },
       // {
       //   path: "/food/:id",
       //   element: <PrivateRoute><FoodDetails></FoodDetails></PrivateRoute>,

@@ -20,8 +20,9 @@ import { Link, NavLink } from "react-router-dom";
 
 function NavList() {
   return (
-    <ul className="flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
-      <MenuItem className="hover:bg-transparent active:bg-transparent focus:bg-transparent">
+    <ul className="flex flex-col lg:flex-row mt-5 lg:mt-0 justify-center items-center gap-3">
+      
+    <li>
 
         <NavLink
           to="/"
@@ -33,19 +34,35 @@ function NavList() {
         >
           Home
         </NavLink>
-      </MenuItem>
-      <MenuItem className="hover:bg-transparent active:bg-transparent focus:bg-transparent">
+    </li>
+   <li>
+
         <NavLink
-          to="/login"
+          to="/courses"
           className={({ isActive }) =>
             isActive
-            ? "font-bold  text-[#FF6636] bg-[#FFEEE8] p-2 h-full w-full rounded-lg"
-              : "font-bold text-gray-800 hover:text-gray-900 p-2  h-full w-full"
+            ? "font-bold flex  text-[#FF6636] bg-[#FFEEE8] p-2 h-full w-full rounded-lg"
+              : "font-bold flex text-gray-800 hover:text-gray-900 p-2  h-full w-full"
           }
         >
-          Home
+          All Courses
         </NavLink>
-      </MenuItem>
+   </li>
+   <li>
+
+        <NavLink
+          to="/become-instructor"
+          className={({ isActive }) =>
+            isActive
+            ? "font-bold flex  text-[#FF6636] bg-[#FFEEE8] p-2 h-full w-full rounded-lg"
+              : "font-bold flex text-gray-800 hover:text-gray-900 p-2  h-full w-full"
+          }
+        >
+        Become A Instructor
+        </NavLink>
+   </li>
+      
+   
     </ul>
   );
 }
@@ -83,7 +100,7 @@ export function ComplexNavbar() {
 
         <div className="flex justify-center items-center gap-2">
           <Button size="sm" variant="primary">
-            <span>Log In</span>
+            <span>Sign In</span>
           </Button>
 
           <ProfileNav></ProfileNav>

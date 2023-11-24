@@ -4,7 +4,7 @@ import { ComplexNavbar } from "../Components/Nav/Nav";
 
 const MainLayout = () => {
   return (
-    <div className="dark:bg-gray-900">
+    <div className="dark:bg-gray-900 font-rubik">
       <div className=" max-w-[1280px] mx-auto px-5 lg:px-10">
         <div className="mt-5 w-full">
           <ComplexNavbar></ComplexNavbar>

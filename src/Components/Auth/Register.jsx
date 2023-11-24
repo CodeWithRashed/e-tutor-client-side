@@ -11,7 +11,7 @@ import { FaEye } from "react-icons/fa6";
 import { toast } from "react-toastify";
 
 const Register = ({ setPageToggle }) => {
-  const { createEmailUser, userInfoUpdate } = useContext(GlobalDataContext);
+  const { createEmailUser, userInfoUpdate, googleLogin, setUserPhoto} = useContext(GlobalDataContext);
   const location = useLocation();
   const navigator = useNavigate();
   //Show Password Status
@@ -62,43 +62,54 @@ const Register = ({ setPageToggle }) => {
         navigator(location.state ? location.state : "/");
       }, 2000);
     } catch (error) {
-      console.log(error);
+      toast.error("Login failed. Please try again.", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
 
-  //Google Login
-  // const loginWithGoogle = () => {
-  //   googleLogin()
-  //     .then(async (user) => {
-  //       const name = await user.user.displayName;
-  //       const email = await user.user.email;
-  //       const imageUrl = await user.user.photoURL;
-  //       setUserPhoto(imageUrl);
-  //       const googleUser = { name, email, imageUrl };
-
-  //       await fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/add/user`, {
-  //         method: "POST",
-  //         headers: {
-  //           "content-type": "application/json",
-  //         },
-  //         body: JSON.stringify(googleUser),
-  //       });
-  //       toast.success("Login Successful, Redirecting", {
-  //         position: "top-center",
-  //         autoClose: 2000,
-  //         hideProgressBar: true,
-  //         closeOnClick: true,
-  //         pauseOnHover: false,
-  //         draggable: true,
-  //         progress: undefined,
-  //         theme: "light",
-  //       });
-  //       setTimeout(() => {
-  //         navigator(location.state ? location.state : "/");
-  //       }, 2000);
-  //     })
-  //     .then();
-  // };
+  // Google Login
+  const loginWithGoogle = async () => {
+    try {
+      const user = await googleLogin();
+      const imageUrl = await user.user.photoURL;
+      setUserPhoto(imageUrl);
+  
+      toast.success("Login Successful, Redirecting", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+  
+      setTimeout(() => {
+        const redirectPath = location.state ? location.state : "/";
+        navigator(redirectPath);
+      }, 2000);
+    } catch (error) {
+      toast.error("Login failed. Please try again.", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
 
   return (
     <div>
@@ -129,7 +140,7 @@ const Register = ({ setPageToggle }) => {
                   <button
                     type="button"
                     onClick={() => {
-                      // loginWithGoogle();
+                      loginWithGoogle();
                     }}
                     className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                   >

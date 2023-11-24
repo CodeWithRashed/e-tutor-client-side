@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   createUserWithEmailAndPassword,
@@ -54,31 +54,17 @@ const DataContext = ({ children }) => {
   };
 
   //Watch User
-  onAuthStateChanged(auth, (user) => {
-    setActiveUser(user);
-    setLoading(false);
-    if (user) {
-      fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/auth/jwt`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ userEmail: user.email }),
-      })
-    } else {
-      // For user logout
-      fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/auth/jwt/clear`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "content-type": "application/json",
-        },
 
-        body: JSON.stringify({})
-      })
+  // onAuthStateChange
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, currentUser => {
+      setActiveUser(currentUser)
+      setLoading(false)
+    })
+    return () => {
+      return unsubscribe()
     }
-  });
+  }, [])
 
   //Global Data Export
   const globalDataVariable = {

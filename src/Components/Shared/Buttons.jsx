@@ -36,16 +36,16 @@ const ButtonSecondary = ({children}) => {
     )
   }
   ButtonPrimary.propTypes = {
-    children: PropTypes.func,
+    children: PropTypes.string,
   };
   ButtonSecondary.propTypes = {
-    children: PropTypes.func,
+    children: PropTypes.string,
   };
   ButtonArrow.propTypes = {
-    children: PropTypes.func,
+    children: PropTypes.string,
   };
   ButtonLoading.propTypes = {
-    children: PropTypes.func,
+    children: PropTypes.string,
     isLoading: PropTypes.bool
   };
   

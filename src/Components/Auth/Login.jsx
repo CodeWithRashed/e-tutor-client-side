@@ -4,13 +4,11 @@ import { GlobalDataContext } from "../../ContextApi/DataContext";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button } from "flowbite-react";
-import { ButtonArrow, ButtonLoading, ButtonPrimary, ButtonSecondary } from "../Shared/Buttons";
-import Pagination from "../Shared/Pagination";
+
 
 const Login = ({ setPageToggle }) => {
   const location = useLocation();
-  const { googleLogin, loginWithEmail, setUserPhoto } =
+  const { loginWithEmail, setUserPhoto, googleLogin } =
     useContext(GlobalDataContext);
   const [loginError, setLoginError] = useState(null);
   const navigator = useNavigate();

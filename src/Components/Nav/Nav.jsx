@@ -12,7 +12,6 @@ import {
   Navbar,
   MobileNav,
   Button,
-  MenuItem,
   IconButton,
 } from "@material-tailwind/react";
 import ProfileNav from "./ProfileNav";

@@ -40,11 +40,11 @@ const DataContext = ({ children }) => {
   };
 
   //Update User Info Image, Name etc..
-  const userInfoUpdate = (name, imageUrl) => {
+  const userInfoUpdate = (name, image) => {
     setLoading(true);
     updateProfile(auth.currentUser, {
       displayName: name,
-      photoURL: imageUrl,
+      photoURL: image,
     });
   };
 

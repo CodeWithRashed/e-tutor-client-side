@@ -2,127 +2,107 @@ import PropTypes from "prop-types";
 import { FcGoogle } from "react-icons/fc";
 import { useContext, useState } from "react";
 import { GlobalDataContext } from "../../ContextApi/DataContext";
-import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button } from "flowbite-react";
-import { AiOutlineLoading } from "react-icons/ai";
-import { ButtonLoading, ButtonPrimary } from "../Shared/Buttons";
+
+import { ButtonLoading } from "../Shared/Buttons";
+import { UploadImage } from "../../utils/ImageUpload";
+import { useForm } from "react-hook-form";
+import { FaEye } from "react-icons/fa6";
+import { toast } from "react-toastify";
 
 const Register = ({ setPageToggle }) => {
-  const [creatingAccount, setCreatingAccount] = useState(false);
+  const { createEmailUser, userInfoUpdate } = useContext(GlobalDataContext);
   const location = useLocation();
-
-  const { createEmailUser, googleLogin, userInfoUpdate, setUserPhoto } =
-    useContext(GlobalDataContext);
-  const passwordRegex =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!])(?=.*[a-zA-Z\d@#$%^&+=!]).{8,}$/;
-  const [passError, setPassError] = useState(null);
-
   const navigator = useNavigate();
-  //Handle Submit Info
-  const handleSubmit = async (event) => {
-    setCreatingAccount(true);
-    event.preventDefault();
-    const form = event.target;
-    const name = form.name.value;
-    const email = form.email.value;
-    const password = form.password.value;
-    const imageUrl = form.imageUrl.value;
+  //Show Password Status
+  const [isShowPass, setIsShowPass] = useState(null);
 
-    //User Data
-    const user = { name, email, imageUrl };
+  //Handle Form Submit
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = async (data) => {
+    console.log(data);
+    const name = data.name;
+    const email = data.email;
+    const password = data.password;
+    const role = "User";
+    let image = null;
 
-    const isValidPassword = passwordRegex.test(password);
-    //Password Error Message
-    if (!isValidPassword) {
-      const invalidMessage =
-        "Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, and one digit.";
-      setPassError(invalidMessage);
-      setCreatingAccount(false);
-      return;
+    //Uploading Image to IMAGE_BB
+    try {
+      const userImage = data.image[0];
+      const uploadData = await UploadImage(userImage);
+      console.log(uploadData?.data.data.display_url);
+      image = uploadData?.data?.data?.display_url;
+    } catch (error) {
+      console.log(error);
     }
 
-    //Send User Data to Database
+    const user = { name, email, password, image, role };
+    console.log(user);
+
+    //Creating user
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_API}/api/v1/add/user`,
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(user),
-        }
-      );
-
-      if (response.ok) {
-        await response.json();
-        setPassError(null);
-        setUserPhoto(imageUrl);
-
-        await createEmailUser(email, password);
-        // Email And Password Registration
-
-        await userInfoUpdate(name, imageUrl);
-
-        //Toast Alert
-        toast.success("Account Created, Redirecting", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setTimeout(() => {
-          navigator(location.state ? location.state : "/");
-        }, 2000);
-      }
-    } finally {
-      setCreatingAccount(false);
-      form.reset();
+      await createEmailUser(email, password);
+      await userInfoUpdate(name, image);
+      toast.success("Account Created, Redirecting", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setTimeout(() => {
+        navigator(location.state ? location.state : "/");
+      }, 2000);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   //Google Login
-  const loginWithGoogle = () => {
-    googleLogin()
-      .then(async (user) => {
-        const name = await user.user.displayName;
-        const email = await user.user.email;
-        const imageUrl = await user.user.photoURL;
-        setUserPhoto(imageUrl);
-        const googleUser = { name, email, imageUrl };
+  // const loginWithGoogle = () => {
+  //   googleLogin()
+  //     .then(async (user) => {
+  //       const name = await user.user.displayName;
+  //       const email = await user.user.email;
+  //       const imageUrl = await user.user.photoURL;
+  //       setUserPhoto(imageUrl);
+  //       const googleUser = { name, email, imageUrl };
 
-        await fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/add/user`, {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(googleUser),
-        });
-        toast.success("Login Successful, Redirecting", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setTimeout(() => {
-          navigator(location.state ? location.state : "/");
-        }, 2000);
-      })
-      .then();
-  };
+  //       await fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/add/user`, {
+  //         method: "POST",
+  //         headers: {
+  //           "content-type": "application/json",
+  //         },
+  //         body: JSON.stringify(googleUser),
+  //       });
+  //       toast.success("Login Successful, Redirecting", {
+  //         position: "top-center",
+  //         autoClose: 2000,
+  //         hideProgressBar: true,
+  //         closeOnClick: true,
+  //         pauseOnHover: false,
+  //         draggable: true,
+  //         progress: undefined,
+  //         theme: "light",
+  //       });
+  //       setTimeout(() => {
+  //         navigator(location.state ? location.state : "/");
+  //       }, 2000);
+  //     })
+  //     .then();
+  // };
 
   return (
-    <div className="">
-      {/* Resposive Form */}
+    <div>
+      {/* Responsive Form */}
       <div className="h-full">
         <div className="dark:bg-slate-900 bg-gray-100 flex h-full items-center py-16">
           <div className="w-full max-w-md mx-auto p-6">
@@ -149,7 +129,7 @@ const Register = ({ setPageToggle }) => {
                   <button
                     type="button"
                     onClick={() => {
-                      loginWithGoogle();
+                      // loginWithGoogle();
                     }}
                     className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
                   >
@@ -162,7 +142,7 @@ const Register = ({ setPageToggle }) => {
                   </div>
 
                   {/* <!-- Form --> */}
-                  <form onSubmit={handleSubmit}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="grid gap-y-4">
                       {/* Form Group Name */}
                       <div>
@@ -174,12 +154,17 @@ const Register = ({ setPageToggle }) => {
                         </label>
                         <div className="relative">
                           <input
+                            {...register("name", { required: true })}
                             placeholder="Type Your Name..."
                             name="name"
                             type="text"
                             className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-                            required
                           />
+                          {errors.name && (
+                            <span className="text-red-500">
+                              Name is required
+                            </span>
+                          )}
                         </div>
                       </div>
                       {/* End Form Group */}
@@ -187,18 +172,23 @@ const Register = ({ setPageToggle }) => {
                       <div>
                         <label
                           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                          htmlFor="file_input"
+                          htmlFor="image"
                         >
                           Upload file
                         </label>
                         <input
+                          {...register("image", { required: true })}
                           className="file:border-0
                           !file:bg-gray-100 !file:me-4
                           !file:py-3 file:px-4
                           dark:file:bg-gray-700 dark:file:text-gray-400"
-                       
                           type="file"
                         />
+                        {errors.image && (
+                          <span className="text-red-500">
+                            Image is required
+                          </span>
+                        )}
                       </div>
                       {/* End Form Group */}
 
@@ -211,13 +201,22 @@ const Register = ({ setPageToggle }) => {
                           Email address
                         </label>
                         <div className="relative">
-                          <input
-                            type="email"
-                            placeholder="Enter Your Email..."
-                            name="email"
-                            className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-                            required
-                          />
+                          <div>
+                            <input
+                              {...register("email", { required: true })}
+                              type="email"
+                              placeholder="Enter Your Email..."
+                              name="email"
+                              className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+                              required
+                            />
+                          </div>
+
+                          {errors.email && (
+                            <span className="text-red-500">
+                              Email is required
+                            </span>
+                          )}
                         </div>
                       </div>
                       {/* End Form Group */}
@@ -233,42 +232,59 @@ const Register = ({ setPageToggle }) => {
                           </label>
                         </div>
                         <div className="relative">
-                          <input
-                            type="password"
-                            placeholder="Type Your Password..."
-                            name="password"
-                            className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-                            required
-                          />
-                          {passError && (
-                            <div className="absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3">
-                              <svg
-                                className="h-5 w-5 text-red-500"
-                                width="16"
-                                height="16"
-                                fill="currentColor"
-                                viewBox="0 0 16 16"
-                                aria-hidden="true"
-                              >
-                                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                              </svg>
+                          <div>
+                            <input
+                              {...register("password", {
+                                required: true,
+                                minLength: 6,
+                                maxLength: 20,
+                                pattern:
+                                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,
+                              })}
+                              type={isShowPass ? "text" : "password"}
+                              placeholder="Type Your Password..."
+                              name="password"
+                              className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+                              required
+                            />
+                            <div
+                              className="absolute cursor-pointer text-gray-500 bg-gray-200 px-1 py-1 translate-y-1/2 -translate-x-1/2  flex justify-center items-center top-0 right-0 rounded-full transition-all ease-in-out"
+                              onClick={() => {
+                                setIsShowPass(!isShowPass);
+                              }}
+                            >
+                              <FaEye />
                             </div>
+                          </div>
+                          {errors.password?.type === "required" && (
+                            <span className="text-red-500">
+                              Password is required
+                            </span>
+                          )}
+                          {errors.password?.type === "maxLength" && (
+                            <span className="text-red-500">
+                              Password should be less then 20
+                            </span>
+                          )}
+                          {errors.password?.type === "minLength" && (
+                            <span className="text-red-500">
+                              Password should at least 6 character long
+                            </span>
+                          )}
+                          {errors.password?.type === "pattern" && (
+                            <span className="text-red-500">
+                              Password should contain at least one lowercase
+                              letter, one uppercase letter, one digit, and one
+                              special character.
+                            </span>
                           )}
                         </div>
                       </div>
                       {/* End Form Group */}
 
-                      {/* display login error */}
-                      {passError && (
-                        <p className="text-xs text-red-600 mt-2 text-center">
-                          {passError}
-                        </p>
-                      )}
-                      {/* display login error */}
-
-                      <ButtonLoading isLoading={false} size="md" type="submit">
-                       Sign Up
-                      </ButtonLoading>
+                      <button type="submit">
+                        <ButtonLoading isLoading={false}>Sign Up</ButtonLoading>
+                      </button>
                     </div>
                   </form>
                 </div>
@@ -277,7 +293,7 @@ const Register = ({ setPageToggle }) => {
           </div>
         </div>
       </div>
-      {/* Resposive Form */}
+      {/* Responsive Form */}
     </div>
   );
 };

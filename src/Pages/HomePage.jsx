@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet"
 import Banner from "../Components/Banner/Banner"
+import Partners from "../Components/Partners/Partners"
 
 const HomePage = () => {
    
@@ -10,6 +11,7 @@ const HomePage = () => {
       </Helmet>
     <div>
       <Banner></Banner>
+      <Partners></Partners>
     </div>
     </div>
   )

@@ -21,6 +21,7 @@ module.exports = withMT( {
         "color-black": "var(--color-black)",
         "color-black-light": "var(--color-black-light)",
         "color-gray": "var(--color-gray)",
+        "section-bg": "var(--color-section-bg)",
         
       }
     },

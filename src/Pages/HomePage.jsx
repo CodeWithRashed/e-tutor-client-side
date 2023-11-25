@@ -3,6 +3,7 @@ import Banner from "../Components/Banner/Banner";
 import Partners from "../Components/Partners/Partners";
 import FeatureSlider from "../Components/FeatureSlider/FeatureSlider";
 import WebsiteStats from "../Components/WebsiteStats/WebsiteStats";
+import BecomeInstructor from "../Components/BecomeInstructor/BecomeInstructor";
 
 const HomePage = () => {
   return (
@@ -22,6 +23,11 @@ const HomePage = () => {
         <div className="max-w-[1280px] mx-auto px-5 lg:px-10 ">
           <FeatureSlider></FeatureSlider>
         </div>
+        <section className="bg-section-bg">
+          <div className="max-w-[1280px] mx-auto px-5 lg:px-10 ">
+            <BecomeInstructor></BecomeInstructor>
+          </div>
+        </section>
         <section className="py-16">
           <WebsiteStats></WebsiteStats>
         </section>

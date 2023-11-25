@@ -3,6 +3,8 @@ import MainLayout from "../Layout/MainLayout";
 import HomePage from "../Pages/HomePage";
 import AuthPage from "../Pages/AuthPage";
 import Error404 from '../Pages/Error404';
+import AllClass from "../Pages/AllClass";
+import BecomeInstructor from "../Pages/BecomeInstructor";
 
 
 export const router = createBrowserRouter([
@@ -23,11 +25,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/courses",
-        element: <div className="h-screen w-full flex justify-center items-center">Courses</div>,
+        element: <AllClass></AllClass>,
       },
       {
         path: "/become-instructor",
-        element: <div className="h-screen w-full flex justify-center items-center">become-instructor</div>,
+        element: <BecomeInstructor></BecomeInstructor>,
       },
       // {
       //   path: "/food/:id",

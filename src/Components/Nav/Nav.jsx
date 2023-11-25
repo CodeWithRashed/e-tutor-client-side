@@ -19,10 +19,8 @@ import { Link, NavLink } from "react-router-dom";
 
 function NavList() {
   return (
-    <ul className="flex flex-col lg:flex-row mt-5 lg:mt-0 justify-center items-center gap-3">
-      
-    <li>
-
+    <ul className="!w-full flex flex-col lg:flex-row mt-5 lg:mt-0 justify-center items-center gap-3">
+      <li>
         <NavLink
           to="/"
           className={({ isActive }) =>
@@ -33,35 +31,31 @@ function NavList() {
         >
           Home
         </NavLink>
-    </li>
-   <li>
-
+      </li>
+      <li>
         <NavLink
           to="/courses"
           className={({ isActive }) =>
             isActive
-            ? "font-bold flex  text-[#FF6636] bg-[#FFEEE8] p-2 h-full w-full rounded-lg"
+              ? "font-bold flex  text-[#FF6636] bg-[#FFEEE8] p-2 h-full w-full rounded-lg"
               : "font-bold flex text-gray-800 hover:text-gray-900 p-2  h-full w-full"
           }
         >
           All Courses
         </NavLink>
-   </li>
-   <li>
-
+      </li>
+      <li>
         <NavLink
           to="/become-instructor"
           className={({ isActive }) =>
             isActive
-            ? "font-bold flex  text-[#FF6636] bg-[#FFEEE8] p-2 h-full w-full rounded-lg"
+              ? "font-bold flex  text-[#FF6636] bg-[#FFEEE8] p-2 h-full w-full rounded-lg"
               : "font-bold flex text-gray-800 hover:text-gray-900 p-2  h-full w-full"
           }
         >
-        Become A Instructor
+          Become A Instructor
         </NavLink>
-   </li>
-      
-   
+      </li>
     </ul>
   );
 }
@@ -79,8 +73,8 @@ export function ComplexNavbar() {
   }, []);
 
   return (
-    <Navbar className="mx-auto  ">
-      <div className="relative mx-auto flex items-center justify-between text-blue-gray-900">
+    <Navbar className="max-w-full fixed rounded-none z-50 top-0 ">
+      <div className="flex items-center justify-between text-blue-gray-900 max-w-[1280px] mx-auto px-5 lg:px-10">
         <Link to="/">
           <img src={logo} className="mr-3 !sm:h-16" alt="E-Tutor Logo" />
         </Link>

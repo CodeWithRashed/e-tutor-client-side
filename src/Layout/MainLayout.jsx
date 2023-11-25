@@ -6,9 +6,7 @@ const MainLayout = () => {
   return (
     <div className="font-rubik">
       <div>
-        <div className="mt-5 w-full max-w-[1280px] mx-auto px-5 lg:px-10">
-          <ComplexNavbar></ComplexNavbar>
-        </div>
+        <ComplexNavbar></ComplexNavbar>
         <Outlet></Outlet>
         <FooterSection></FooterSection>
       </div>

@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet"
 import Banner from "../Components/Banner/Banner"
 import Partners from "../Components/Partners/Partners"
+import FeatureSlider from "../Components/FeatureSlider/FeatureSlider"
 
 const HomePage = () => {
    
@@ -12,6 +13,9 @@ const HomePage = () => {
     <div>
       <Banner></Banner>
       <Partners></Partners>
+      <div className="w-full">
+      <FeatureSlider></FeatureSlider>
+      </div>
     </div>
     </div>
   )

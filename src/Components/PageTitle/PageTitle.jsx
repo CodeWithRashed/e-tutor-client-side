@@ -14,6 +14,7 @@ const PageTitle = ({children}) => {
         {breadcrumbs.map(({ match, breadcrumb }) => (
         <NavLink key={match.pathname} to={match.pathname}>
           {breadcrumb }
+          {/* {console.log(breadcrumb.key.split("/")[2])} */}
         </NavLink>
       ))}
     </Breadcrumbs>

@@ -4,7 +4,9 @@ import HomePage from "../Pages/HomePage";
 import AuthPage from "../Pages/AuthPage";
 import Error404 from '../Pages/Error404';
 import AllClass from "../Pages/AllClass";
+import PrivateRoute from './PrivateRoute'
 import BecomeInstructor from "../Pages/BecomeInstructor";
+import SingleCourseDetails from "../Pages/SingleCourseDetails";
 
 
 export const router = createBrowserRouter([
@@ -31,11 +33,12 @@ export const router = createBrowserRouter([
         path: "/become-instructor",
         element: <BecomeInstructor></BecomeInstructor>,
       },
-      // {
-      //   path: "/food/:id",
-      //   element: <PrivateRoute><FoodDetails></FoodDetails></PrivateRoute>,
-      //   loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/get/food/${params.id}`, {credentials: "include"})
-      // },
+      {
+        path: "/courses/:id",
+        element: <SingleCourseDetails></SingleCourseDetails>,
+        // element: <PrivateRoute><FoodDetails></FoodDetails></PrivateRoute>,
+        // loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/get/food/${params.id}`, {credentials: "include"})
+      },
       // {
       //   path: "/food/manage/:id",
       //   element: <PrivateRoute><ManageSingleRequest></ManageSingleRequest></PrivateRoute>,

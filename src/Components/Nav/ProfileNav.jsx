@@ -14,14 +14,17 @@ import {
 } from "@material-tailwind/react";
 import { GlobalDataContext } from "../../ContextApi/DataContext";
 import { toast } from "react-toastify";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const ProfileNav = () => {
   const { activeUser, userLogout, userPhoto } = useContext(GlobalDataContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const axiosSecure = useAxiosSecure()
 
   // Manage User Logout
   const doLogout = async () => {
     try {
+      axiosSecure.post("/logout", {user: activeUser.email })
       await userLogout();
     } catch {
       toast.error("Logout failed. Please try again.", {

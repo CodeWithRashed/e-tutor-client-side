@@ -94,7 +94,7 @@ export function AdminNav() {
               <List className="p-0">
                 <button
                   onClick={() => {
-                    let location = "/dashboard/manage-students";
+                    let location = "/dashboard/manage-users";
                     NavigateUsers(location);
                   }}
                 >
@@ -102,22 +102,10 @@ export function AdminNav() {
                     <ListItemPrefix>
                       <FaAngleRight strokeWidth={3} className="h-3 w-5" />
                     </ListItemPrefix>
-                    Mange Student 
+                    Manage Users 
                   </ListItem>
                 </button>
-                <button
-                  onClick={() => {
-                    let location = "/dashboard/manage-teachers";
-                    NavigateUsers(location);
-                  }}
-                >
-                  <ListItem>
-                    <ListItemPrefix>
-                      <FaAngleRight strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    Manage Teachers
-                  </ListItem>
-                </button>
+
                 <button
                   onClick={() => {
                     let location = "/dashboard/manage-classes";

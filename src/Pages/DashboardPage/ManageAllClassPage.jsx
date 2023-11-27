@@ -1,6 +1,6 @@
 import AllClassesTable from "../../Components/Tables/AllClassesTable"
 
-const DashboardAllClass = () => {
+const ManageAllClassPage = () => {
   return (
     <div>
       <AllClassesTable></AllClassesTable>
@@ -8,4 +8,4 @@ const DashboardAllClass = () => {
   )
 }
 
-export default DashboardAllClass
+export default ManageAllClassPage

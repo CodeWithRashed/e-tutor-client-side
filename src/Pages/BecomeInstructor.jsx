@@ -249,6 +249,22 @@ const BecomeInstructor = () => {
           {errors.experience && (
             <p className="text-red-500">This is required.</p>
           )}
+        <select
+            {...register("title", { required: true })}
+            label="Title"
+            className="py-3 px-3 pe-9 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-700 dark:border-transparent dark:text-gray-400 dark:focus:ring-gray-600"
+          >
+            <option className="text-gray-400" value="">
+              Select Title
+            </option>
+            <option value="designer">Designer</option>
+            <option value="developer">Developer</option>
+            <option value="marketer">Marketer</option>
+            <option value="editor">Video Editor</option>
+          </select>
+          {errors.experience && (
+            <p className="text-red-500">This is required.</p>
+          )}
 
           <select
             {...register("category", { required: true })}

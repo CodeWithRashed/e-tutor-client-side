@@ -9,7 +9,14 @@ import BecomeInstructor from "../Pages/BecomeInstructor";
 import SingleCourseDetails from "../Pages/SingleCourseDetails";
 import DashboardLayout from "../Layout/DashboardLayout";
 import TeachersRequest from "../Pages/DashboardPage/TeachersRequest";
-import DashboardAllClass from "../Pages/DashboardPage/DashboardAllClass";
+import MyEnrollClass from "../Pages/DashboardPage/MyEnrollClass";
+import MyEnrollClassDetails from "../Pages/DashboardPage/MyEnrollClassDetails";
+import Profile from "../Pages/DashboardPage/Profile";
+import ManageUsers from "../Pages/DashboardPage/ManageUsers";
+import ManageAllClassPage from "../Pages/DashboardPage/ManageAllClassPage";
+import AddClassPage from "../Pages/DashboardPage/AddClassPage";
+import ManageMyClass from "../Pages/DashboardPage/ManageMyClass";
+import MyClassDetails from "../Pages/DashboardPage/MyClassDetails";
 
 
 export const router = createBrowserRouter([
@@ -63,17 +70,14 @@ export const router = createBrowserRouter([
     element: <DashboardLayout></DashboardLayout>,
     errorElement: <Error404></Error404>,
     children: [
+      // Admin Routes
       {
-        path: "/dashboard/manage-students",
-        element: <div>Students</div>,
-      },
-      {
-        path: "/dashboard/manage-teachers",
-        element: <div>Teachers</div>,
+        path: "/dashboard/manage-users",
+        element: <ManageUsers></ManageUsers>,
       },
       {
         path: "/dashboard/manage-classes",
-        element: <DashboardAllClass></DashboardAllClass>,
+        element: <ManageAllClassPage></ManageAllClassPage>,
       },
       {
         path: "/dashboard/orders",
@@ -83,9 +87,34 @@ export const router = createBrowserRouter([
         path: "/dashboard/teachers-request",
         element: <TeachersRequest></TeachersRequest>,
       },
+      //Student Route
+      {
+        path: "/dashboard/my-enroll-class",
+        element: <MyEnrollClass></MyEnrollClass>,
+      },
+      {
+        path: "/dashboard/my-enroll-class/:id",
+        element: <MyEnrollClassDetails></MyEnrollClassDetails>,
+      },
+
+      // Teacher Route
+      {
+        path: "/dashboard/add-class",
+        element: <AddClassPage></AddClassPage>,
+      },
+      {
+        path: "/dashboard/my-class",
+        element: <ManageMyClass></ManageMyClass>,
+      },
+      {
+        path: "/dashboard/my-class/:id",
+        element: <MyClassDetails></MyClassDetails>,
+      },
+
+      // Common Routes
       {
         path: "/dashboard/profile",
-        element: <div>Profile</div>,
+        element: <Profile></Profile>,
       },
     ],
   },

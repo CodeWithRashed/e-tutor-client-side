@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@material-tailwind/react": "^2.1.4",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@tanstack/react-table": "^8.10.7",
     "axios": "^1.6.1",
     "dotenv": "^16.3.1",

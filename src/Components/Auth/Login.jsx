@@ -62,7 +62,7 @@ const onSubmit = async (data) => {
       const user = await googleLogin();
       const imageUrl = await user.user.photoURL;
       setUserPhoto(imageUrl);
-
+      axiosSecure.post("/jwt", {user: user?.user?.email})
       toast.success("Login Successful, Redirecting", {
         position: "top-center",
         autoClose: 2000,

@@ -8,12 +8,13 @@ import { UploadImage } from "../../utils/ImageUpload";
 import { useForm } from "react-hook-form";
 import { FaEye } from "react-icons/fa6";
 import { toast } from "react-toastify";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const Register = ({ setPageToggle }) => {
   const { createEmailUser, userInfoUpdate, googleLogin, setUserPhoto} = useContext(GlobalDataContext);
   const location = useLocation();
   const navigator = useNavigate();
-
+  const axiosSecure = useAxiosSecure()
   //Show Password Status
   const [isShowPass, setIsShowPass] = useState(null);
 
@@ -58,6 +59,7 @@ const Register = ({ setPageToggle }) => {
 
     //Creating user
     try {
+
       await createEmailUser(email, password);
       await userInfoUpdate(name, image);
       toast.success("Account Created, Redirecting", {
@@ -93,7 +95,7 @@ const Register = ({ setPageToggle }) => {
       const user = await googleLogin();
       const imageUrl = await user.user.photoURL;
       setUserPhoto(imageUrl);
-  
+      axiosSecure.post("/jwt", {user: user?.user?.email})
       toast.success("Login Successful, Redirecting", {
         position: "top-center",
         autoClose: 2000,

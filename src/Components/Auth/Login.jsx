@@ -7,9 +7,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ButtonPrimary } from "../Shared/Buttons";
 import { FaEye } from "react-icons/fa6";
 import { useForm } from "react-hook-form";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const Login = ({ setPageToggle }) => {
   const { loginWithEmail, setUserPhoto, googleLogin } = useContext(GlobalDataContext);
+  const axiosSecure = useAxiosSecure()
   const location = useLocation();
   const navigator = useNavigate();
     //Show Password Status
@@ -22,9 +24,9 @@ const {
   formState: { errors },
 } = useForm();
 const onSubmit = async (data) => {
-  console.log(data)
   const {email, password} = data
   try{
+    axiosSecure.post("/jwt", {user: email})
    await loginWithEmail(email, password)
     toast.success("Login Successful, Redirecting", {
       position: "top-center",

@@ -1,7 +1,5 @@
-import { useState } from "react";
-import React from "react";
+import { useContext, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import { FaGear } from "react-icons/fa6";
 import { MdDashboard } from "react-icons/md";
 import { IoMdPower } from "react-icons/io";
 import { FaAngleDown } from "react-icons/fa";
@@ -14,88 +12,100 @@ import {
   MenuItem,
   Avatar,
 } from "@material-tailwind/react";
+import { GlobalDataContext } from "../../ContextApi/DataContext";
+import { toast } from "react-toastify";
 
 const ProfileNav = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const profileMenuItems = [
-        {
-          label: "My Profile",
-          icon: FaUserCircle,
-        },
-        {
-          label: "Edit Profile",
-          icon: FaGear,
-        },
-        {
-          label: "Dashboard",
-          icon: MdDashboard,
-        },
-       
-        {
-          label: "Sign Out",
-          icon: IoMdPower,
-        },
-      ];
-       
- 
-    const closeMenu = () => setIsMenuOpen(false);
+  const { activeUser, userLogout, userPhoto } = useContext(GlobalDataContext);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Manage User Logout
+  const doLogout = async () => {
+    try {
+      await userLogout();
+    } catch {
+      toast.error("Logout failed. Please try again.", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } finally {
+      toast.success("Logout Successful", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
+  const closeMenu = () => setIsMenuOpen(false);
   return (
     <div>
-        <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
-      <MenuHandler>
-        <Button
-          variant="text"
-          color="blue-gray"
-          className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
-        >
-          <Avatar
-            variant="circular"
-            size="sm"
-            alt="tania andrew"
-            className="border border-gray-900 p-0.5"
-            src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
-          />
-          <FaAngleDown
-            strokeWidth={2.5}
-            className={`h-3 w-3 transition-transform ${
-              isMenuOpen ? "rotate-180" : ""
-            }`}
-          />
-        </Button>
-      </MenuHandler>
-      <MenuList className="p-1">
-        {profileMenuItems.map(({ label, icon }, key) => {
-          const isLastItem = key === profileMenuItems.length - 1;
-          return (
-            <MenuItem
-              key={label}
-              onClick={closeMenu}
-              className={`flex items-center gap-2 rounded ${
-                isLastItem
-                  ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                  : ""
+      <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
+        <MenuHandler>
+          <Button
+            variant="text"
+            color="blue-gray"
+            className="flex items-center gap-1 rounded-full py-0.5 pr-2 pl-0.5 lg:ml-auto"
+          >
+            <Avatar
+              variant="circular"
+              size="sm"
+              alt={activeUser?.displayName}
+              className="border border-gray-900 p-0.5"
+              src={userPhoto || activeUser?.photoURL}
+            />
+            <FaAngleDown
+              strokeWidth={2.5}
+              className={`h-3 w-3 transition-transform ${
+                isMenuOpen ? "rotate-180" : ""
               }`}
+            />
+          </Button>
+        </MenuHandler>
+        <MenuList className="p-1">
+          <MenuItem
+            onClick={closeMenu}
+            className={`flex items-center gap-2 rounded hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10`}
+          >
+            <FaUserCircle></FaUserCircle> Profile
+          </MenuItem>
+          <MenuItem
+            onClick={closeMenu}
+            className={`flex items-center gap-2 rounded hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10`}
+          >
+            <MdDashboard></MdDashboard> Dashboard
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              closeMenu();
+              doLogout();
+            }}
+            className={`flex items-center gap-2 rounded hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10`}
+          >
+            <Typography
+              as="span"
+              variant="small"
+              className="font-normal flex gap-2 items-center"
+              color="red"
             >
-              {React.createElement(icon, {
-                className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
-                strokeWidth: 2,
-              })}
-              <Typography
-                as="span"
-                variant="small"
-                className="font-normal"
-                color={isLastItem ? "red" : "inherit"}
-              >
-                {label}
-              </Typography>
-            </MenuItem>
-          );
-        })}
-      </MenuList>
-    </Menu>
-      
+              <IoMdPower className="-translate-y-[1px]"></IoMdPower> Logout
+            </Typography>
+          </MenuItem>
+        </MenuList>
+      </Menu>
     </div>
-  )
-}
+  );
+};
 
-export default ProfileNav
+export default ProfileNav;

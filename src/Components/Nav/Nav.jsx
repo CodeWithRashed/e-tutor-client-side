@@ -3,16 +3,12 @@ import { RiMenu2Fill } from "react-icons/ri";
 import logo from "../../../src/assets/logo.png";
 import React from "react";
 import { GlobalDataContext } from "../../ContextApi/DataContext";
-import { FaUserCircle } from "react-icons/fa";
-import { FaGear } from "react-icons/fa6";
-import { MdDashboard } from "react-icons/md";
-import { IoMdPower } from "react-icons/io";
-import { FaAngleDown } from "react-icons/fa";
+
 import {
   Navbar,
-  MobileNav,
   Button,
   IconButton,
+  Collapse,
 } from "@material-tailwind/react";
 import ProfileNav from "./ProfileNav";
 import { Link, NavLink } from "react-router-dom";
@@ -63,8 +59,8 @@ function NavList() {
 
 export function ComplexNavbar() {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
-  const { activeUser, userLogout, userPhoto } = useContext(GlobalDataContext);
-
+  const { activeUser} = useContext(GlobalDataContext);
+console.log(activeUser)
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
   React.useEffect(() => {
@@ -97,7 +93,7 @@ export function ComplexNavbar() {
           {activeUser ? (
             <ProfileNav></ProfileNav>
           ) : (
-            <Button size="sm" variant="primary">
+            <Button size="sm" >
               <Link to="/login">
                 <span>Sign In</span>
               </Link>
@@ -105,9 +101,9 @@ export function ComplexNavbar() {
           )}
         </div>
       </div>
-      <MobileNav open={isNavOpen} className="overflow-scroll">
+      <Collapse open={isNavOpen} className="overflow-scroll">
         <NavList />
-      </MobileNav>
+      </Collapse>
     </Navbar>
   );
 }

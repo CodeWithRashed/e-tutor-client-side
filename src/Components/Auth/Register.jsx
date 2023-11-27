@@ -38,8 +38,19 @@ const Register = ({ setPageToggle }) => {
       console.log(uploadData?.data.data.display_url);
       image = uploadData?.data?.data?.display_url;
       setUserPhoto(image)
-    } catch (error) {
-      console.log(error);
+    } catch {
+
+        toast.error("Register failed. Please try again.", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
     }
 
     const user = { name, email, password, image, role };

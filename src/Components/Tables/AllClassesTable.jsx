@@ -68,7 +68,7 @@ const TABLE_ROWS = [
   },
 ];
 
-const AllClasses = () => {
+const AllClassesTable = () => {
   return (
     <div className="p-3">
       <Card className="h-full w-full shadow-lg border-none">
@@ -223,4 +223,4 @@ const AllClasses = () => {
   );
 };
 
-export default AllClasses;
+export default AllClassesTable;

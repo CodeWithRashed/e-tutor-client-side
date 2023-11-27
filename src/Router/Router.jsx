@@ -9,6 +9,8 @@ import BecomeInstructor from "../Pages/BecomeInstructor";
 import SingleCourseDetails from "../Pages/SingleCourseDetails";
 import DashboardLayout from "../Layout/DashboardLayout";
 import TeachersRequest from "../Pages/DashboardPage/TeachersRequest";
+import DashboardAllClass from "../Pages/DashboardPage/DashboardAllClass";
+
 
 export const router = createBrowserRouter([
   {
@@ -71,7 +73,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/manage-classes",
-        element: <div>Manage Classes</div>,
+        element: <DashboardAllClass></DashboardAllClass>,
       },
       {
         path: "/dashboard/orders",

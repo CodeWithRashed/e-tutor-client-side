@@ -18,6 +18,7 @@ import ProfileNav from "./ProfileNav";
 import { Link, NavLink } from "react-router-dom";
 
 function NavList() {
+  // const { activeUser, userLogout, userPhoto } = useContext(GlobalDataContext);
   return (
     <ul className="!w-full flex flex-col lg:flex-row mt-5 lg:mt-0 justify-center items-center gap-3">
       <li>
@@ -62,6 +63,7 @@ function NavList() {
 
 export function ComplexNavbar() {
   const [isNavOpen, setIsNavOpen] = React.useState(false);
+  const { activeUser, userLogout, userPhoto } = useContext(GlobalDataContext);
 
   const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
@@ -92,11 +94,15 @@ export function ComplexNavbar() {
         </IconButton>
 
         <div className="flex justify-center items-center gap-2">
-          <Button size="sm" variant="primary">
-            <span>Sign In</span>
-          </Button>
-
-          <ProfileNav></ProfileNav>
+          {activeUser ? (
+            <ProfileNav></ProfileNav>
+          ) : (
+            <Button size="sm" variant="primary">
+              <Link to="/login">
+                <span>Sign In</span>
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
       <MobileNav open={isNavOpen} className="overflow-scroll">

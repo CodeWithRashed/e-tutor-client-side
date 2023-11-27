@@ -3,7 +3,6 @@ import { FcGoogle } from "react-icons/fc";
 import { useContext, useState } from "react";
 import { GlobalDataContext } from "../../ContextApi/DataContext";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import { ButtonLoading } from "../Shared/Buttons";
 import { UploadImage } from "../../utils/ImageUpload";
 import { useForm } from "react-hook-form";
@@ -14,6 +13,7 @@ const Register = ({ setPageToggle }) => {
   const { createEmailUser, userInfoUpdate, googleLogin, setUserPhoto} = useContext(GlobalDataContext);
   const location = useLocation();
   const navigator = useNavigate();
+
   //Show Password Status
   const [isShowPass, setIsShowPass] = useState(null);
 
@@ -37,6 +37,7 @@ const Register = ({ setPageToggle }) => {
       const uploadData = await UploadImage(userImage);
       console.log(uploadData?.data.data.display_url);
       image = uploadData?.data?.data?.display_url;
+      setUserPhoto(image)
     } catch (error) {
       console.log(error);
     }

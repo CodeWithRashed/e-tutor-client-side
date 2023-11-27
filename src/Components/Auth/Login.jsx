@@ -59,10 +59,14 @@ const onSubmit = async (data) => {
   //Google Login
   const loginWithGoogle = async () => {
     try {
-      const user = await googleLogin();
-      const imageUrl = await user.user.photoURL;
+      const userData = await googleLogin();
+      const imageUrl = await userData?.user.photoURL;
       setUserPhoto(imageUrl);
-      axiosSecure.post("/jwt", {user: user?.user?.email})
+      axiosSecure.post("/jwt", {user: userData?.user?.email})
+
+      //Saving Data to Database
+      const user = {name:userData?.user?.displayName, email:userData?.user?.email, image:userData?.user?.photoURL, role: "User"}
+       axiosSecure.post("/api/add/user", user);
       toast.success("Login Successful, Redirecting", {
         position: "top-center",
         autoClose: 2000,

@@ -24,7 +24,7 @@ const ProfileNav = () => {
   // Manage User Logout
   const doLogout = async () => {
     try {
-      axiosSecure.post("/logout", {user: activeUser.email })
+      axiosSecure.post("/logout", {})
       await userLogout();
     } catch {
       toast.error("Logout failed. Please try again.", {

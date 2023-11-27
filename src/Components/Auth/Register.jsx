@@ -11,10 +11,11 @@ import { toast } from "react-toastify";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const Register = ({ setPageToggle }) => {
-  const { createEmailUser, userInfoUpdate, googleLogin, setUserPhoto} = useContext(GlobalDataContext);
+  const { createEmailUser, userInfoUpdate, googleLogin, setUserPhoto } =
+    useContext(GlobalDataContext);
   const location = useLocation();
   const navigator = useNavigate();
-  const axiosSecure = useAxiosSecure()
+  const axiosSecure = useAxiosSecure();
   //Show Password Status
   const [isShowPass, setIsShowPass] = useState(null);
 
@@ -38,28 +39,26 @@ const Register = ({ setPageToggle }) => {
       const uploadData = await UploadImage(userImage);
       console.log(uploadData?.data.data.display_url);
       image = uploadData?.data?.data?.display_url;
-      setUserPhoto(image)
+      setUserPhoto(image);
     } catch {
-
-        toast.error("Register failed. Please try again.", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-
+      toast.error("Register failed. Please try again.", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
 
     const user = { name, email, password, image, role };
     console.log(user);
-
     //Creating user
     try {
-
+      //Saving Data to Database
+      axiosSecure.post("/api/add/user", user);
       await createEmailUser(email, password);
       await userInfoUpdate(name, image);
       toast.success("Account Created, Redirecting", {
@@ -92,10 +91,13 @@ const Register = ({ setPageToggle }) => {
   // Google Login
   const loginWithGoogle = async () => {
     try {
-      const user = await googleLogin();
-      const imageUrl = await user.user.photoURL;
+      const userData = await googleLogin();
+      const imageUrl = await userData.user.photoURL;
       setUserPhoto(imageUrl);
-      axiosSecure.post("/jwt", {user: user?.user?.email})
+      axiosSecure.post("/jwt", { user: userData?.user?.email });
+      const user = {name:userData?.user?.displayName, email:userData?.user?.email, image:userData?.user?.photoURL, role: "User"}
+      //Saving Data to Database
+       axiosSecure.post("/api/add/user", user);
       toast.success("Login Successful, Redirecting", {
         position: "top-center",
         autoClose: 2000,
@@ -106,7 +108,7 @@ const Register = ({ setPageToggle }) => {
         progress: undefined,
         theme: "light",
       });
-  
+
       setTimeout(() => {
         const redirectPath = location.state ? location.state : "/";
         navigator(redirectPath);

@@ -66,8 +66,18 @@ const ManageUsersTable = () => {
 
 
   //Handle Modal or Dialog Open
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpen = () => setIsModalOpen(!isModalOpen);
+  const [currentUserId, setCurrentUserId] = useState(null)
+  const [currentUserName, setCurrentUserName] = useState(null)
+
+  //Handle Make a user admin
+  const makeAdmin =() =>{
+    console.log(
+      "current usr id", currentUserId,
+      "current usr Name", currentUserName
+    )
+  }
   return (
     <div className="mt-0 pt-0">
       {dbUserCount && (
@@ -148,7 +158,11 @@ const ManageUsersTable = () => {
 
                         <td className={classes}>
                           <Tooltip content="Make Admin">
-                          <Button size="sm">Edit</Button>
+                          <Button onClick={() =>{
+                            setCurrentUserId(_id)
+                            setCurrentUserName(name)
+                            handleOpen()
+                          }} size="sm">Edit</Button>
                           </Tooltip>
                         </td>
                       </tr>
@@ -194,32 +208,32 @@ const ManageUsersTable = () => {
               Next
             </Button>
           </CardFooter>
-        </Card>
-      )}
 
-      {/* Dialog */}
-      <Dialog open={open} handler={handleOpen}>
-        <DialogHeader>Its a simple dialog.</DialogHeader>
-        <DialogBody>
-          The key to more success is to have a lot of pillows. Put it this way,
-          it took me twenty five years to get these plants, twenty five years of
-          blood sweat and tears, and I&apos;m never giving up, I&apos;m just
-          getting started. I&apos;m up to something. Fan luv.
-        </DialogBody>
-        <DialogFooter>
+           {/* Dialog */}
+      <Dialog open={isModalOpen} handler={handleOpen} >
+        <p className="text-xl flex-col text-color-black mt-5 flex justify-center items-center text-center">Are you sure! you want to promote <br /><span className="text-color-primary"> {currentUserName}</span> to an admin?</p>
+        
+        <DialogFooter className="flex justify-center items-center gap-5">
           <Button
             variant="text"
             color="red"
             onClick={handleOpen}
-            className="mr-1"
+            className="mr-1 "
           >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="green" onClick={handleOpen}>
+          <Button variant="gradient" color="green" onClick={()=>{
+            handleOpen()
+            makeAdmin()
+            }}>
             <span>Confirm</span>
           </Button>
         </DialogFooter>
       </Dialog>
+        </Card>
+      )}
+
+     
     </div>
   );
 };

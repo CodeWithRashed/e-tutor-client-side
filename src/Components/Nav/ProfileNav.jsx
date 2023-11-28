@@ -15,11 +15,13 @@ import {
 import { GlobalDataContext } from "../../ContextApi/DataContext";
 import { toast } from "react-toastify";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { useNavigate } from "react-router-dom";
 
 const ProfileNav = () => {
   const { activeUser, userLogout, userPhoto } = useContext(GlobalDataContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const axiosSecure = useAxiosSecure()
+  const navigator = useNavigate();
 
   // Manage User Logout
   const doLogout = async () => {
@@ -78,13 +80,19 @@ const ProfileNav = () => {
         </MenuHandler>
         <MenuList className="p-1">
           <MenuItem
-            onClick={closeMenu}
+            onClick={() => {
+              closeMenu();
+              navigator("/dashboard/profile");
+            }}
             className={`flex items-center gap-2 rounded hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10`}
           >
             <FaUserCircle></FaUserCircle> Profile
           </MenuItem>
           <MenuItem
-            onClick={closeMenu}
+            onClick={() => {
+              closeMenu();
+              navigator("/dashboard");
+            }}
             className={`flex items-center gap-2 rounded hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10`}
           >
             <MdDashboard></MdDashboard> Dashboard

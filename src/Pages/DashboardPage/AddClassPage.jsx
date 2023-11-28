@@ -3,10 +3,13 @@ import { ButtonArrow } from "../../Components/Shared/Buttons";
 import { toast } from "react-toastify";
 import { UploadImage } from "../../utils/ImageUpload";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { GlobalDataContext } from "../../ContextApi/DataContext";
 
 const AddClassPage = () => {
   const [isDisable, setIsDisable] = useState(true);
+  const {activeUser} = useContext(GlobalDataContext)
+  console.log(activeUser)
   //Handle Form Submit
   const {
     register,
@@ -15,11 +18,13 @@ const AddClassPage = () => {
   } = useForm();
   const onSubmit = async (data) => {
     console.log(data);
-    const name = data.name;
-    const email = data.email;
-    const password = data.password;
-    const role = "User";
+    const title = data.title;
     let image = null;
+    const price = data.price;
+    const email = data.email || activeUser?.email;
+    const duration = data.duration;
+    const level = data.level;
+    const language = data.language;
 
     //Uploading Image to IMAGE_BB
     try {
@@ -31,8 +36,8 @@ const AddClassPage = () => {
       console.log(error);
     }
 
-    const user = { name, email, password, image, role };
-    console.log(user);
+    const courseData = { title, image, price, email, duration, level, language };
+    console.log(courseData);
 
     //Creating user
     try {
@@ -70,11 +75,11 @@ const AddClassPage = () => {
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
             <Avatar
-              src="https://docs.material-tailwind.com/img/face-2.jpg"
-              alt="avatar"
+              src={activeUser?.photoURL}
+              alt={activeUser?.displayName}
             />
             <div>
-              <Typography variant="h6">Tania Andrew</Typography>
+              <Typography variant="h6">{activeUser?.displayName}</Typography>
               <Typography variant="small" color="gray" className="font-normal">
                 Web Developer
               </Typography>
@@ -90,7 +95,7 @@ const AddClassPage = () => {
       <div className="p-8 shadow-lg">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-y-4">
-            {/* Form Group Name */}
+            {/* Form Group title */}
             <div>
               <label
                 htmlFor="title"
@@ -112,6 +117,8 @@ const AddClassPage = () => {
               </div>
             </div>
             {/* End Form Group */}
+
+
             {/* Form Group Image URL */}
             <div>
               <label
@@ -136,10 +143,10 @@ const AddClassPage = () => {
             </div>
             {/* End Form Group */}
 
-            {/* Form Group Role */}
+            {/* Form Group price */}
             <div>
               <label
-                htmlFor="name"
+                htmlFor="price"
                 className="block text-sm mb-2 dark:text-white"
               >
                 Course Price
@@ -171,8 +178,8 @@ const AddClassPage = () => {
                 <div>
                   <input
                     disabled={true}
-                    defaultValue="demo@gmail.com"
-                    {...register("email", { required: true })}
+                    defaultValue={activeUser?.email}
+                    {...register("email")}
                     type="email"
                     placeholder="Enter Your Email..."
                     name="email"
@@ -187,10 +194,10 @@ const AddClassPage = () => {
             </div>
             {/* End Form Group */}
 
-            {/* Form Group Email*/}
+            {/* Form Group duration*/}
             <div>
               <label
-                htmlFor="email"
+                htmlFor="duration"
                 className="block text-sm mb-2 dark:text-white"
               >
                 Course Duration
@@ -217,7 +224,7 @@ const AddClassPage = () => {
             </div>
             {/* End Form Group */}
 
-            {/* Form Group Email*/}
+            {/* Form Group level*/}
             <div>
               <label
                 htmlFor="level"
@@ -248,10 +255,10 @@ const AddClassPage = () => {
             {/* End Form Group */}
 
 
-             {/* Form Group Email*/}
+             {/* Form Group language*/}
              <div>
               <label
-                htmlFor="level"
+                htmlFor="language"
                 className="block text-sm mb-2 dark:text-white"
               >
                 Course Language
@@ -279,7 +286,7 @@ const AddClassPage = () => {
             {/* End Form Group */}
 
             <button
-              disabled={true}
+              disabled={false}
               type="submit"
               className={` ${
                 isDisable

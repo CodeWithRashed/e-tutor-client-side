@@ -6,9 +6,9 @@ import { TeacherNav } from "../Components/Nav/DashboardNav/TeacherNav";
 import { useContext, useEffect, useState } from "react";
 import { GlobalDataContext } from "../ContextApi/DataContext";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import LoadingScreen from "../Components/Shared/LoadingScreen";
 
-
-const DashboardLayout =  () => {
+const DashboardLayout = () => {
   const { activeUser } = useContext(GlobalDataContext);
   const axiosSecure = useAxiosSecure();
   const [dbUser, setDbUser] = useState(null);
@@ -18,11 +18,12 @@ const DashboardLayout =  () => {
       if (activeUser?.email) {
         try {
           const userEmail = activeUser.email;
-          const response = await axiosSecure.get(`/api/get/user?email=${userEmail}`);
+          const response = await axiosSecure.get(
+            `/api/get/user?email=${userEmail}`
+          );
           setDbUser(response.data[0]);
         } catch (error) {
-          
-          console.error('Error fetching user data:', error);
+          console.error("Error fetching user data:", error);
         }
       }
     };
@@ -43,7 +44,9 @@ const DashboardLayout =  () => {
                   {dbUser?.role == "Teacher" && <TeacherNav></TeacherNav>}
                 </div>
               ) : (
-                <div> Loading...</div>
+                <div className="flex justify-center items-center w-screen h-[90vh]">
+                  <LoadingScreen></LoadingScreen>
+                </div>
               )}
             </div>
             <div className=" col-span-9">

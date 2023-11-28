@@ -1,9 +1,13 @@
+
 import ManageUsersTable from "../../Components/Tables/ManageUsersTable"
 
 
+
 const ManageUsers = () => {
+  
   return (
-    <div>
+    <div className="px-5">
+
       <ManageUsersTable></ManageUsersTable>
     </div>
   )

@@ -1,9 +1,11 @@
 
 
+
 const MyEnrollClassDetails = () => {
+
   return (
     <div>
-      
+      MyEnrollClassDetails
     </div>
   )
 }

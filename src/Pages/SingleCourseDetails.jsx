@@ -17,8 +17,12 @@ import { LabelMain } from "../Components/Shared/Labels";
 import { FaDollarSign, FaUserFriends, FaSwatchbook } from "react-icons/fa";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { ButtonLoading } from "../Components/Shared/Buttons";
+import { useLoaderData } from "react-router-dom";
 
 const SingleCourseDetails = () => {
+  const course = useLoaderData();
+  const {title, thumbnail, teacher, price, description, _id} =  course[0]
+console.log(title, thumbnail, teacher, price, description, _id)
   return (
     <div>
       <div>

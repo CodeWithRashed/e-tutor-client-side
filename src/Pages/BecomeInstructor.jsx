@@ -2,19 +2,25 @@ import PageTitle from "../Components/PageTitle/PageTitle";
 import { IconHolderPrimary } from "../Components/Shared/IconHolder";
 import bannerImage from "../assets/instructor-banner.png";
 import { PiStudentBold } from "react-icons/pi";
-import {
-  Typography,
-  Avatar,
-} from "@material-tailwind/react";
+import { Typography, Avatar } from "@material-tailwind/react";
 import { useForm } from "react-hook-form";
 import { ButtonPrimary } from "../Components/Shared/Buttons";
+import { useContext } from "react";
+import { GlobalDataContext } from "../ContextApi/DataContext";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 const BecomeInstructor = () => {
+  const { activeUser } = useContext(GlobalDataContext);
+  const axiosSecure = useAxiosSecure();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    const newData = { isTeacherRequest: "Pending", ...data };
+    console.log(activeUser.email)
+    axiosSecure.patch(`/api/update/user?email=${activeUser.email}`, newData);
+  };
   return (
     <div>
       <PageTitle>Become an Instructor</PageTitle>
@@ -188,33 +194,20 @@ const BecomeInstructor = () => {
         <h1 className="text-3xl text-center">Apply to become Instructor</h1>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-1/2 mx-auto space-y-3"
+          className="w-1/2 mx-auto space-y-3 mt-8"
         >
           <div className="relative flex justify-between gap-5">
-            <input
-              type="email"
-              className="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-700 dark:border-transparent dark:text-gray-400 dark:focus:ring-gray-600"
-              placeholder="Enter name"
-            />
-            <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
-              <svg
-                className="flex-shrink-0 w-4 h-4 text-gray-500"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
+            <div className="w-full">
+              <input
+                disabled={true}
+                defaultValue={activeUser?.displayName}
+                type="name"
+                className="bg-gray-200 py-3 px-4 ps-11 block w-full border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-700 dark:border-transparent dark:text-gray-400 dark:focus:ring-gray-600"
+                placeholder="Enter name"
+              />
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 w-full bg-gray-100 rounded-lg">
               <Avatar src={bannerImage} alt={bannerImage} size="md" />
               <div className="flex flex-col">
                 <Typography
@@ -222,14 +215,14 @@ const BecomeInstructor = () => {
                   color="blue-gray"
                   className="font-normal"
                 >
-                  Rashed
+                  {activeUser?.displayName}
                 </Typography>
                 <Typography
                   variant="small"
                   color="blue-gray"
                   className="font-normal opacity-70"
                 >
-                  email@gmail.com
+                  {activeUser?.email}
                 </Typography>
               </div>
             </div>
@@ -242,14 +235,14 @@ const BecomeInstructor = () => {
             <option className="text-gray-400" value="">
               Select Experience
             </option>
-            <option value="beginner">Beginner</option>
-            <option value="intermediate">Intermediate</option>
-            <option value="experienced">Experienced</option>
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Experienced">Experienced</option>
           </select>
           {errors.experience && (
             <p className="text-red-500">This is required.</p>
           )}
-        <select
+          <select
             {...register("title", { required: true })}
             label="Title"
             className="py-3 px-3 pe-9 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-orange-500 focus:ring-orange-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-700 dark:border-transparent dark:text-gray-400 dark:focus:ring-gray-600"
@@ -257,10 +250,10 @@ const BecomeInstructor = () => {
             <option className="text-gray-400" value="">
               Select Title
             </option>
-            <option value="designer">Designer</option>
-            <option value="developer">Developer</option>
-            <option value="marketer">Marketer</option>
-            <option value="editor">Video Editor</option>
+            <option value="Designer">Designer</option>
+            <option value="Developer">Developer</option>
+            <option value="Marketer">Marketer</option>
+            <option value="Video Editor">Video Editor</option>
           </select>
           {errors.experience && (
             <p className="text-red-500">This is required.</p>
@@ -273,9 +266,10 @@ const BecomeInstructor = () => {
             <option className="text-gray-400" value="">
               Select Category
             </option>
-            <option value="web-development">Web Development</option>
-            <option value="digital-marketing">Digital Marketing</option>
-            <option value="video-editing">Video Editing</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Digital Marketing">Digital Marketing</option>
+            <option value="Video Editing">Video Editing</option>
+            <option value="Graphic Design">Graphic Design</option>
           </select>
           {errors.category && <p className="text-red-500">This is required.</p>}
           <button type="submit">

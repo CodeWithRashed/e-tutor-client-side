@@ -6,15 +6,19 @@ import {
   Avatar,
 } from "@material-tailwind/react";
 import { ButtonPrimary } from "../Shared/Buttons";
+import { Link } from "react-router-dom";
 
-const CourseCardExtra = () => {
+const CourseCardExtra = (singleCourse) => {
+  const {title, thumbnail, teacher, price, description, _id} = singleCourse.singleCourse
+  console.log(singleCourse)
+
   return (
     <div>
-      <Card className="w-full max-w-[26rem] shadow-lg">
+      <Card className="w-full shadow-lg">
         <CardHeader floated={false} color="blue-gray">
           <img
-            src="https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-            alt="ui/ux review check"
+            src={thumbnail}
+            alt={title}
           />
           <div className="to-bg-black-10 absolute inset-0 h-full w-full bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
         </CardHeader>
@@ -26,40 +30,44 @@ const CourseCardExtra = () => {
               className="font-medium truncate ..."
             >
               <h1 className="truncate ...">
-                Wooden House, Florida Wooden House, Florida Wooden House,
-                Florida
+               {title}
               </h1>
             </Typography>
             <Typography
               color="blue-gray"
               className="flex items-center gap-1.5 font-normal"
             >
-              <h1 className="text-2xl text-color-primary font-bold">75$</h1>
+              <h1 className="text-2xl text-color-primary font-bold">{price}$</h1>
             </Typography>
           </div>
           <Typography color="gray" className="font-medium truncate ...">
-            Enter a freshly updated and thoughtfully furnished peaceful home
-            surrounded by ancient trees, stone walls, and open meadows.
+           {description}
           </Typography>
 
           <div className="avatar flex gap-3 mt-3 justify-between items-center">
             <div className="flex justify-between gap-2 items-center w-full">
 
             <Avatar
-              size="lg"
+              size="sm"
               variant="circular"
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80"
+              src={teacher?.image}
               alt="tania andrew"
             />
             <div className="flex w-full flex-col gap-0.5">
-              <div className="flex flex-col">
-                <h1> Tania Andrew</h1>
-                <h1>Instructor</h1>
+              <div className="flex flex-col text-xs">
+                <h1> {teacher?.name}</h1>
+                <h1>{teacher?.name}</h1>
               </div>
             </div>
             </div>
             <div className="w-full">
-            <ButtonPrimary>Enroll</ButtonPrimary>
+            
+              <Link to={`/courses/${_id}`}>
+                
+              <ButtonPrimary>Enroll</ButtonPrimary>
+                
+                </Link>
+            
             </div>
           </div>
         </CardBody>

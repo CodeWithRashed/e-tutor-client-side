@@ -45,6 +45,7 @@ export const router = createBrowserRouter([
       {
         path: "/courses/:id",
         element: <SingleCourseDetails></SingleCourseDetails>,
+        loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/get/courses?_id=${params.id}` , {credentials: "include"})
         // element: <PrivateRoute><FoodDetails></FoodDetails></PrivateRoute>,
         // loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/get/food/${params.id}`, {credentials: "include"})
       },
@@ -61,7 +62,6 @@ export const router = createBrowserRouter([
       // {
       //   path: "/food/update/:id",
       //   element: <PrivateRoute><UpdateFood></UpdateFood></PrivateRoute>,
-      //   loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/get/food/${params.id}` , {credentials: "include"})
       // }
     ],
   },
@@ -95,8 +95,9 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/my-enroll-class/:id",
         element: <MyEnrollClassDetails></MyEnrollClassDetails>,
+       
       },
-
+      
       // Teacher Route
       {
         path: "/dashboard/add-class",

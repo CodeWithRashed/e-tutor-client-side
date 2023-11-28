@@ -1,4 +1,4 @@
-import { FaEdit as PencilIcon } from "react-icons/fa";
+
 import {
   Card,
   Typography,
@@ -9,216 +9,246 @@ import {
   Avatar,
   IconButton,
   Tooltip,
+  Dialog,
+  DialogFooter,
 } from "@material-tailwind/react";
+import { useEffect, useState } from "react";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const TABLE_HEAD = ["Teacher", "Experience", "Title", "Category", "Status", "Action"];
 
-const TABLE_ROWS = [
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-spotify.svg",
-    name: "Rashed",
-    experience: "Intermediate",
-    title: "Designer",
-    category: "Graphic Design",
-    status: "accepted",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-amazon.svg",
-    name: "Amazon",
-    experience: "Intermediate",
-    title: "Developer",
-    category: "Web Design",
-    status: "accepted",
-    account: "master-card",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-pinterest.svg",
-    name: "Rabbi",
-    experience: "Intermediate",
-    title: "Marketer",
-    category: "Digital Marketing",
-    status: "pending",
-    account: "master-card",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-google.svg",
-    name: "Google",
-    experience: "Intermediate",
-    title: "Designer",
-    category: "Graphic Design",
-    status: "accepted",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-  {
-    img: "https://docs.material-tailwind.com/img/logos/logo-netflix.svg",
-    name: "netflix",
-    experience: "Intermediate",
-    title: "Developer",
-    category: "Web Design",
-    status: "rejected",
-    accountNumber: "1234",
-    expiry: "06/2026",
-  },
-];
 
 const TeachersRequestTable = () => {
-  return (
-    <div className="p-3">
-      <Card className="h-full w-full shadow-lg border-none">
-        <CardBody className="px-0">
-          <table className="w-full table-auto text-left">
-            <thead>
-              <tr>
-                {TABLE_HEAD.map((head) => (
-                  <th
-                    key={head}
-                    className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {TABLE_ROWS.map(
-                (
-                  {
-                    img,
-                    name,
-                    experience,
-                    title,
-                    category,
-                    status,
-                  },
-                  index
-                ) => {
-                  const isLast = index === TABLE_ROWS.length - 1;
-                  const classes = isLast
-                    ? "p-2"
-                    : "p-2 border-b border-blue-gray-50";
+  const [activePage, setActivePage] = useState(1);
+  //Getting Database All User from database
+  const axiosSecure = useAxiosSecure();
+  const [dbAllUserData, setDbAllUserData] = useState(null);
+  const [dbUserCount, setDbUserCount] = useState(null);
+  const { isLoading, error, refetch } = useQuery({
+    queryKey: ["userData"],
+    queryFn: async () => {
+      try {
+        const responseUserCount = await axiosSecure.get(`/api/get/usersCount`);
+        const response = await axiosSecure.get(
+          `/api/get/users?page=${activePage}&pageSize=2`
+        );
+        const userData = response.data;
+        const userCountData = responseUserCount.data;
+        setDbAllUserData(userData);
+        setDbUserCount(userCountData.length);
+        return userData;
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        throw error; // Rethrow the error to be caught by React Query
+      }
+    },
+  });
+ 
+  // refetch table data
+  useEffect(() => {
+    refetch();
+  }, [activePage, refetch]);
 
-                  return (
-                    <tr key={name}>
-                      <td className={classes}>
-                        <div className="flex items-center gap-3">
-                          <Avatar
-                            src={img}
-                            alt={name}
-                            size="md"
-                            className="border border-blue-gray-50 bg-blue-gray-50/50 object-contain p-1"
-                          />
+  // Handle Table Pagination
+  let totalItems = 2;
+  if (dbUserCount) {
+    totalItems = dbUserCount;
+  }
+  const perPageItems = 2;
+  const pagesCount = Math.ceil(parseInt(totalItems) / parseInt(perPageItems));
+  const numberOfPages = [...Array(pagesCount).keys()].map((page) => page + 1);
+  //Pagination Function
+  const setPageIndex = (index) => {
+    setActivePage(index);
+  };
+
+
+  //Handle Modal or Dialog Open
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpen = () => setIsModalOpen(!isModalOpen);
+  const [currentUserId, setCurrentUserId] = useState(null)
+  const [currentUserName, setCurrentUserName] = useState(null)
+
+  //Handle Make a user admin
+  const makeAdmin =() =>{
+    const newData = {role:"Admin"}
+    axiosSecure.patch(`/api/update/user?_id=${currentUserId}`, newData )
+    
+  }
+  return (
+    <div className="mt-0 pt-0">
+      {dbUserCount && (
+        <Card className="h-full w-full shadow-lg border-none">
+          <CardBody className="px-0">
+            <table className="w-full table-auto text-left">
+              <thead>
+                <tr>
+                  {TABLE_HEAD.map((head) => (
+                    <th
+                      key={head}
+                      className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                    >
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal leading-none opacity-70"
+                      >
+                        {head}
+                      </Typography>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {dbAllUserData?.map(
+                  ({ _id, name,   image, experience, title, category, isTeacherRequest}, index) => {
+                    const isLast = index === dbAllUserData?.length - 1;
+                    const classes = isLast
+                      ? "p-2"
+                      : "p-2 border-b border-blue-gray-50";
+
+                    return (
+                      <tr key={_id}>
+                        <td className={classes}>
+                          <div className="flex items-center gap-3">
+                            <Avatar
+                              src={image}
+                              alt={name}
+                              size="md"
+                              className="border border-blue-gray-50 bg-blue-gray-50/50 object-contain p-1"
+                            />
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-bold"
+                            >
+                              {name}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={classes}>
                           <Typography
                             variant="small"
                             color="blue-gray"
-                            className="font-bold"
+                            className="font-normal"
                           >
-                            {name}
+                            {experience}
                           </Typography>
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {experience}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {title}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {category}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <div className="w-max">
-                          <Chip
-                            size="sm"
-                            variant="ghost"
-                            value={status}
-                            color={
-                              status === "accepted"
-                                ? "green"
-                                : status === "pending"
-                                ? "amber"
-                                : "red"
-                            }
-                          />
-                        </div>
-                      </td>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {title}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {category}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <div className="w-max">
+                            <Chip
+                              size="sm"
+                              variant="ghost"
+                              value={isTeacherRequest}
+                              color={
+                                isTeacherRequest === "Approved"
+                                  ? "green"
+                                  : isTeacherRequest === "Pending"
+                                  ? "amber"
+                                  : "red"
+                              }
+                            />
+                          </div>
+                        </td>
 
-                      <td className={classes}>
-                        <Tooltip content="Edit User">
-                          <IconButton variant="text">
-                            <PencilIcon className="h-4 w-4" />
-                          </IconButton>
-                        </Tooltip>
-                      </td>
-                    </tr>
-                  );
-                }
-              )}
-            </tbody>
-          </table>
-        </CardBody>
-        <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
-          <Button variant="outlined" size="sm">
-            Previous
+                        <td className={classes}>
+                          <Tooltip content="Make Admin">
+                          <Button onClick={() =>{
+                            setCurrentUserId(_id)
+                            setCurrentUserName(name)
+                            handleOpen()
+                          }} size="sm">Edit</Button>
+                          </Tooltip>
+                        </td>
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+            </table>
+          </CardBody>
+          <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
+            <Button
+              onClick={() => {
+                setPageIndex(activePage - 1);
+              }}
+              disabled={activePage == 1}
+              variant="outlined"
+              size="sm"
+            >
+              Previous
+            </Button>
+            <div className="flex items-center gap-2">
+              {numberOfPages.map((page, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setPageIndex(page);
+                  }}
+                >
+                  <IconButton variant={activePage == page ? "" : "outlined"}>
+                    {page}
+                  </IconButton>
+                </button>
+              ))}
+            </div>
+            <Button
+              onClick={() => {
+                setPageIndex(activePage + 1);
+              }}
+              disabled={activePage == pagesCount}
+              variant="outlined"
+              size="sm"
+            >
+              Next
+            </Button>
+          </CardFooter>
+
+           {/* Dialog */}
+      <Dialog open={isModalOpen} handler={handleOpen} >
+        <p className="text-xl flex-col text-color-black mt-5 flex justify-center items-center text-center">Are you sure! you want to promote <br /><span className="text-color-primary"> {currentUserName}</span> to an admin?</p>
+        
+        <DialogFooter className="flex justify-center items-center gap-5">
+          <Button
+            variant="text"
+            color="red"
+            onClick={handleOpen}
+            className="mr-1 "
+          >
+            <span>Cancel</span>
           </Button>
-          <div className="flex items-center gap-2">
-            <IconButton variant="outlined" size="sm">
-              1
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              2
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              3
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              ...
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              8
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              9
-            </IconButton>
-            <IconButton variant="text" size="sm">
-              10
-            </IconButton>
-          </div>
-          <Button variant="outlined" size="sm">
-            Next
+          <Button variant="gradient" color="green" onClick={()=>{
+            handleOpen()
+            makeAdmin()
+            }}>
+            <span>Confirm</span>
           </Button>
-        </CardFooter>
-      </Card>
+        </DialogFooter>
+      </Dialog>
+        </Card>
+      )}
+
+     
     </div>
   );
 };

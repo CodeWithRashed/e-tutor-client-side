@@ -5,11 +5,27 @@ import { UploadImage } from "../../utils/ImageUpload";
 import { useForm } from "react-hook-form";
 import { useContext, useState } from "react";
 import { GlobalDataContext } from "../../ContextApi/DataContext";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 const AddClassPage = () => {
   const [isDisable, setIsDisable] = useState(true);
-  const {activeUser} = useContext(GlobalDataContext)
-  console.log(activeUser)
+  const { activeUser } = useContext(GlobalDataContext);
+  const [dbUserData, setDbUserData] = useState(null);
+  const axiosSecure = useAxiosSecure();
+  console.log(activeUser);
+
+  const { isLoading, error, refetch } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const response = await axiosSecure.get(
+        `/api/get/user?email=${activeUser?.email}`
+      );
+      setDbUserData(response.data[0]);
+      return response.data;
+    },
+  });
+
   //Handle Form Submit
   const {
     register,
@@ -17,31 +33,46 @@ const AddClassPage = () => {
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    console.log(data);
     const title = data.title;
-    let image = null;
+    const teacher = await dbUserData?._id;
     const price = data.price;
-    const email = data.email || activeUser?.email;
-    const duration = data.duration;
+    let thumbnail = null;
+    const description = "Abcd";
+    const duration = await data.duration;
     const level = data.level;
     const language = data.language;
+    const enrollCount = 0;
+    const ratting = 0;
+    const email = await data.email || await activeUser?.email;
 
     //Uploading Image to IMAGE_BB
     try {
       const userImage = data.image[0];
       const uploadData = await UploadImage(userImage);
-      console.log(uploadData?.data.data.display_url);
-      image = uploadData?.data?.data?.display_url;
+      thumbnail = uploadData?.data?.data?.display_url;
     } catch (error) {
       console.log(error);
     }
 
-    const courseData = { title, image, price, email, duration, level, language };
+    const courseData = {
+      title,
+      teacher,
+      price,
+      thumbnail,
+      description,
+      duration,
+      level,
+      language,
+      enrollCount,
+      ratting,
+      email,
+    };
     console.log(courseData);
 
-    //Creating user
-    try {
-      toast.success("Account Created, Redirecting", {
+    //Success Message
+        try {
+          axiosSecure.post("/api/add/course", courseData)
+      toast.success("Course Added, Wait for approval", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: true,
@@ -51,11 +82,9 @@ const AddClassPage = () => {
         progress: undefined,
         theme: "light",
       });
-      setTimeout(() => {
-        navigator(location.state ? location.state : "/");
-      }, 2000);
+      
     } catch (error) {
-      toast.error("Register failed. Please try again.", {
+      toast.error("Course adding failed. Please try again.", {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: true,
@@ -74,10 +103,7 @@ const AddClassPage = () => {
         {/* Header */}
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
-            <Avatar
-              src={activeUser?.photoURL}
-              alt={activeUser?.displayName}
-            />
+            <Avatar src={activeUser?.photoURL} alt={activeUser?.displayName} />
             <div>
               <Typography variant="h6">{activeUser?.displayName}</Typography>
               <Typography variant="small" color="gray" className="font-normal">
@@ -117,7 +143,6 @@ const AddClassPage = () => {
               </div>
             </div>
             {/* End Form Group */}
-
 
             {/* Form Group Image URL */}
             <div>
@@ -254,9 +279,8 @@ const AddClassPage = () => {
             </div>
             {/* End Form Group */}
 
-
-             {/* Form Group language*/}
-             <div>
+            {/* Form Group language*/}
+            <div>
               <label
                 htmlFor="language"
                 className="block text-sm mb-2 dark:text-white"

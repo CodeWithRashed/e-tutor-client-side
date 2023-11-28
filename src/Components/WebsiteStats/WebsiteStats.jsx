@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { ButtonPrimary, ButtonSecondary } from "../Shared/Buttons"
 
 const WebsiteStats = () => {
@@ -6,8 +7,12 @@ const WebsiteStats = () => {
       <div className="space-y-3">
       <h1 className="text-4xl">Embark on a Journey of Professional Growth with Us!</h1>
       <div className="w-88 gap-3 flex">
+        <Link to="/login">
         <ButtonPrimary>Join The Family</ButtonPrimary>
+        </Link>
+        <Link to="/courses">
         <ButtonSecondary>Browse All Courses</ButtonSecondary>
+        </Link>
       </div>
       </div>
       <div className="flex gap-5 justify-center items-center" >

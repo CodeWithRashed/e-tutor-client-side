@@ -1,5 +1,6 @@
 import { ButtonPrimary } from "../Shared/Buttons";
-import heroBg from "../../assets/hero-banner.png"
+import heroBg from "../../assets/hero-banner.png";
+import { Link } from "react-router-dom";
 
 const Banner = () => {
   return (
@@ -10,10 +11,12 @@ const Banner = () => {
             Learn with expert anytime anywhere
           </h1>
           <p className="text-color-gray">
-            Our mission is to help people to find the best course <br /> online and
-            learn with expert anytime, anywhere.
+            Our mission is to help people to find the best course <br /> online
+            and learn with expert anytime, anywhere.
           </p>
-          <ButtonPrimary>Create an account</ButtonPrimary>
+          <Link to="/login">
+            <ButtonPrimary>Create an account</ButtonPrimary>
+          </Link>
         </div>
         <div className="image-container flex justify-center items-center">
           <img src={heroBg} alt="" />

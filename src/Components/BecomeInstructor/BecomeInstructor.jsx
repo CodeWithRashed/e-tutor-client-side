@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import instructorImage from "../../assets/instructor.png";
 import { ButtonArrow } from "../Shared/Buttons";
 
@@ -24,7 +25,10 @@ const BecomeInstructor = () => {
             E-Tutor. We provide the tools and skills to teach what you love.
           </p>
           <button>
+
+          <Link to="/become-instructor">
             <ButtonArrow>Start Teaching</ButtonArrow>
+          </Link>
           </button>
         </div>
         <div className="bottom-0 right-0  absolute ">

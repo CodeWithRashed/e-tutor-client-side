@@ -30,7 +30,15 @@ const FeatureSlider = () => {
           },
         }}
         modules={[Pagination]}
-        className="w-full h-[75vh]"
+        className="w-full h-[80vh]"
+        style={{
+          "--swiper-pagination-color": "#FF6636",
+          "--swiper-pagination-bullet-inactive-color": "#FFDDD1",
+          "--swiper-pagination-bullet-inactive-opacity": "5px",
+          "--swiper-pagination-bullet-size": "12px",
+          "--swiper-pagination-bullet-horizontal-gap": "10px"
+          
+      }}
       >
        
         <SwiperSlide className="w-full">

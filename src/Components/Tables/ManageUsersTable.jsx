@@ -73,12 +73,9 @@ const ManageUsersTable = () => {
 
   //Handle Make a user admin
   const makeAdmin =() =>{
-    const newData = {name: "Rashed", role:"Admin"}
+    const newData = {role:"Admin"}
     axiosSecure.patch(`/api/update/user?_id=${currentUserId}`,newData )
-    console.log(
-      "current usr id", currentUserId,
-      "current usr Name", currentUserName
-    )
+    
   }
   return (
     <div className="mt-0 pt-0">

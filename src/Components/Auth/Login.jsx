@@ -62,6 +62,7 @@ const onSubmit = async (data) => {
       const userData = await googleLogin();
       const imageUrl = await userData?.user.photoURL;
       setUserPhoto(imageUrl);
+      console.log(imageUrl)
       axiosSecure.post("/jwt", {user: userData?.user?.email})
 
       //Saving Data to Database

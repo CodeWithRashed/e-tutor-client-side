@@ -5,26 +5,17 @@ import { UploadImage } from "../../utils/ImageUpload";
 import { useForm } from "react-hook-form";
 import { useContext, useState } from "react";
 import { GlobalDataContext } from "../../ContextApi/DataContext";
-import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+
+
 
 const AddClassPage = () => {
   const [isDisable, setIsDisable] = useState(true);
-  const { activeUser } = useContext(GlobalDataContext);
-  const [dbUserData, setDbUserData] = useState(null);
+  const { activeUser, dbUserData } = useContext(GlobalDataContext);
   const axiosSecure = useAxiosSecure();
-  console.log(activeUser);
+  console.log(activeUser, dbUserData);
 
-  const { isLoading, error, refetch } = useQuery({
-    queryKey: ["user"],
-    queryFn: async () => {
-      const response = await axiosSecure.get(
-        `/api/get/user?email=${activeUser?.email}`
-      );
-      setDbUserData(response.data[0]);
-      return response.data;
-    },
-  });
+  
 
   //Handle Form Submit
   const {

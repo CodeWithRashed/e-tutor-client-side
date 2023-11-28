@@ -17,6 +17,8 @@ const provider = new GoogleAuthProvider();
 //Firebase Auth
 import { auth } from "../Config/FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 //Data Context Components
 const DataContext = ({ children }) => {
@@ -25,6 +27,19 @@ const DataContext = ({ children }) => {
   const [userPhoto, setUserPhoto] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  //Getting Database User
+  const axiosSecure = useAxiosSecure();
+  const [dbUserData, setDbUserData] = useState(null);
+  const { isLoading, error, refetch } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const response = await axiosSecure.get(
+        `/api/get/user?email=${activeUser?.email}`
+      );
+      setDbUserData(response.data[0]);
+      return response.data;
+    },
+  });
   //Create User Email & Pass Func
   const createEmailUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -77,6 +92,7 @@ const DataContext = ({ children }) => {
     setUserPhoto,
     userPhoto,
     loading,
+    dbUserData
   };
   return (
     <GlobalDataContext.Provider value={globalDataVariable}>

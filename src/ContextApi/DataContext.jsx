@@ -26,6 +26,7 @@ const DataContext = ({ children }) => {
   const [activeUser, setActiveUser] = useState(null);
   const [userPhoto, setUserPhoto] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isRoleLoading, setIsRoleLoading] = useState(true)
 
   //Getting Database User
   const axiosSecure = useAxiosSecure();
@@ -36,7 +37,9 @@ const DataContext = ({ children }) => {
       const response = await axiosSecure.get(
         `/api/get/user?email=${activeUser?.email}`
       );
-      setDbUserData(response.data[0]);
+      const userData = await response.data[0]
+      setDbUserData(userData);
+      setIsRoleLoading(false)
       return response.data;
     },
   });

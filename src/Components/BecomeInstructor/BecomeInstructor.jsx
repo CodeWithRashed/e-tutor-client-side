@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import instructorImage from "../../assets/instructor.png";
 import { ButtonArrow } from "../Shared/Buttons";
 
 const ApplySteps = ({children}) => {
@@ -32,7 +31,7 @@ const BecomeInstructor = () => {
           </button>
         </div>
         <div className="bottom-0 right-0  absolute ">
-          <img src={instructorImage} alt="" />
+          <img src="https://tuitiontoppers.com/frontassets/assets/images/become-thumb.png" alt="" />
         </div>
       </div>
       <div className="bg-white p-8 space-y-5">

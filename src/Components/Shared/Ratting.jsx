@@ -1,10 +1,10 @@
 import Ratting from "react-rating";
 import { FaRegStar } from "react-icons/fa";
 import { FaStar } from "react-icons/fa6";
-const RattingComponent = () => {
+const RattingComponent = ({rating}) => {
   return (
     <Ratting
-      initialRating={2.5}
+      initialRating={rating}
       readonly
       emptySymbol={
         <FaRegStar href="#icon-star-empty" className="icon text-orange-500" />

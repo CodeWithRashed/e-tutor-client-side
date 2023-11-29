@@ -21,7 +21,7 @@ import { useLoaderData } from "react-router-dom";
 
 const SingleCourseDetails = () => {
   const course = useLoaderData();
-  const {title, thumbnail, teacher, price, description, _id} =  course[0]
+  const {_id, thumbnail, description, title, teacher, price, image, enrollCount, duration, level, language, rating} =  course[0]
 console.log(title, thumbnail, teacher, price, description, _id)
   return (
     <div>
@@ -38,16 +38,17 @@ console.log(title, thumbnail, teacher, price, description, _id)
           <div className="col-span-8">
             <div className="head-content space-y-3 mt-3 bg-section-bg p-3">
               <h1 className="text-3xl text-color-black">
-                Title: Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Modi, vitae!
+                {title}
               </h1>
               <div className="flex justify-between items-center">
                 <div className="flex flex-col">
-                  <div className="flex gap-3">
-                    <div className="h-12 w-12 bg-color-primary rounded-full"></div>
+                  <div className="flex gap-3 items-center">
+                    <div className="h-12 w-12 rounded-full overflow-hidden">
+                        <img className="h-12 w-12 object-cover " src={teacher?.image} alt="" />
+                    </div>
                     <div>
-                      <h1>Created By:</h1>
-                      <p>Rashed</p>
+                      <h1 className="text-sm">Created By:</h1>
+                      <p className="text-sm">{teacher?.name}</p>
                     </div>
                   </div>
                 </div>
@@ -55,11 +56,11 @@ console.log(title, thumbnail, teacher, price, description, _id)
                 {/* Ratting */}
                 <div className="flex gap-2 items-center justify-center">
                   <div className="h-12 text-xl flex justify-center items-center">
-                    <RattingComponent className="flex justify-center items-center"></RattingComponent>
+                    <RattingComponent rating={rating} className="flex justify-center items-center"></RattingComponent>
                   </div>
                   <div className="h-12 flex justify-center items-center">
                     <span className="text-color-gray -translate-y-[2px]">
-                      (Total 30 Ratting)
+                    ({rating})
                     </span>
                   </div>
                 </div>
@@ -231,14 +232,14 @@ console.log(title, thumbnail, teacher, price, description, _id)
                 <div className="cart-head px-3">
                   <div className="py-5  flex justify-between">
                     <h1 className="text-2xl">
-                      ${price}
+                      ${ parseFloat(price).toFixed(0) -(parseFloat(price).toFixed(0) * parseFloat(price).toFixed(0)/100) }
                       <span className="text-base text-color-gray line-through">
-                        26$
+                      {parseFloat(price).toFixed(0)}$
                       </span>
                     </h1>
 
                     <div>
-                      <LabelMain>56% OFF</LabelMain>
+                      <LabelMain>{price}% OFF</LabelMain>
                     </div>
                   </div>
                 </div>
@@ -254,7 +255,7 @@ console.log(title, thumbnail, teacher, price, description, _id)
                         <div className="details">Course Duration</div>
                       </div>
 
-                      <div className="data">6 Month</div>
+                      <div className="data">{duration}</div>
                     </li>
                     <li className="flex justify-between">
                       <div className="flex gap-2 justify-center items-center">
@@ -264,7 +265,7 @@ console.log(title, thumbnail, teacher, price, description, _id)
                         <div className="details">Course Level</div>
                       </div>
 
-                      <div className="data">Beginner</div>
+                      <div className="data">{level}</div>
                     </li>
                     <li className="flex justify-between">
                       <div className="flex gap-2 justify-center items-center">
@@ -274,7 +275,7 @@ console.log(title, thumbnail, teacher, price, description, _id)
                         <div className="details">Students Enrolled</div>
                       </div>
 
-                      <div className="data">60</div>
+                      <div className="data">{enrollCount}</div>
                     </li>
                     <li className="flex justify-between">
                       <div className="flex gap-2 justify-center items-center">
@@ -284,7 +285,7 @@ console.log(title, thumbnail, teacher, price, description, _id)
                         <div className="details">Language</div>
                       </div>
 
-                      <div className="data">English</div>
+                      <div className="data">{language}</div>
                     </li>
                   </ul>
                 </div>
@@ -346,10 +347,10 @@ console.log(title, thumbnail, teacher, price, description, _id)
               <hr className="py-3" />
               {/* Share this Course */}
               <div className="my-5">
-                <h1>Share this course:</h1>
+                {/* <h1>Share this course:</h1>
                 <div>
                     Social Icons
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

@@ -3,7 +3,7 @@
 #### Learn Today is an online learning platform for teachers and student. Teacher can make courses for student while student will be able to access them. (This is client side repo)
 
 - [Server Side Repo]()
-- [Live Project Link (Firebase)]()
+- [Live Project Link (Firebase)](https://e-tutor-989d6.web.app)
 - [Live Project Link (Vercel)]()
 
 ## Project Features

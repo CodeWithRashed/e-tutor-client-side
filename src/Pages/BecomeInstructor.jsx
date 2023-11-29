@@ -5,12 +5,38 @@ import { PiStudentBold } from "react-icons/pi";
 import { Typography, Avatar } from "@material-tailwind/react";
 import { useForm } from "react-hook-form";
 import { ButtonPrimary } from "../Components/Shared/Buttons";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GlobalDataContext } from "../ContextApi/DataContext";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { IoDocumentAttach, IoTime } from "react-icons/io5";
+import { MdClass } from "react-icons/md";
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import { HiUserGroup } from "react-icons/hi";
+import { Helmet } from "react-helmet";
+import { FaUserGraduate } from "react-icons/fa";
 const BecomeInstructor = () => {
   const { activeUser } = useContext(GlobalDataContext);
   const axiosSecure = useAxiosSecure();
+//User Info Count
+const [totalTeacher, setTotalTeacher] = useState(0)
+const [totalUser, setTotalUser] = useState(0)
+const [totalStudent, setTotalStudent] = useState(0)
+
+useEffect(  ()=>{
+  const getTeacherCount = async () => {
+    const teacherCountRes  = await axiosSecure.get("/api/get/users?isTeacherRequest=Accepted")
+    setTotalTeacher(teacherCountRes.data.length)
+  }
+  const getUserCount =  async () =>{
+  const userCountRes  = await axiosSecure.get("/api/get/usersCount")
+    setTotalUser(userCountRes.data.length)
+}
+  getTeacherCount()
+  getUserCount()
+
+},[axiosSecure])
+
+
   const {
     register,
     handleSubmit,
@@ -18,11 +44,14 @@ const BecomeInstructor = () => {
   } = useForm();
   const onSubmit = async (data) => {
     const newData = { isTeacherRequest: "Pending", ...data };
-    console.log(activeUser.email)
-    axiosSecure.patch(`/api/update/user?email=${activeUser.email}`, newData);
+    console.log(activeUser?.email);
+    axiosSecure.patch(`/api/update/user?email=${activeUser?.email}`, newData);
   };
   return (
     <div>
+      <Helmet>
+        <title>E-Tutor | Become an Instructor</title>
+        </Helmet>
       <PageTitle>Become an Instructor</PageTitle>
       <div className="max-w-[1280px] mx-auto px-5 lg:px-10">
         <div>
@@ -51,23 +80,26 @@ const BecomeInstructor = () => {
       </div>
 
       <div className="bg-color-primary-light py-10">
-        <div className="max-w-[1280px] mx-auto px-5 lg:px-10 flex justify-between">
+        <div className="max-w-[1280px] mx-auto px-5 lg:px-10 flex justify-center gap-20 flex-wrap">
+          {/* infoCardContainer */}
           <div className="items-container flex gap-3 items-center">
             {/* icon */}
             <div>
               <div className="flex items-center gap-2">
                 <IconHolderPrimary>
-                  <PiStudentBold></PiStudentBold>
+                <HiUserGroup />
                 </IconHolderPrimary>
               </div>
             </div>
             {/* details */}
             <div>
-              <h1 className="text-color-black font-medium">67.1k</h1>
-              <h3 className="text-color-gray">Students</h3>
+              <h1 className="text-color-black font-medium">{totalUser}</h1>
+              <h3 className="text-color-gray">Active User</h3>
             </div>
           </div>
-          <div className="items-container flex gap-3 items-center">
+
+           {/* infoCardContainer */}
+           <div className="items-container flex gap-3 items-center">
             {/* icon */}
             <div>
               <div className="flex items-center gap-2">
@@ -78,56 +110,28 @@ const BecomeInstructor = () => {
             </div>
             {/* details */}
             <div>
-              <h1 className="text-color-black font-medium">67.1k</h1>
-              <h3 className="text-color-gray">Students</h3>
+              <h1 className="text-color-black font-medium">{totalUser - totalTeacher}</h1>
+              <h3 className="text-color-gray">Student</h3>
             </div>
           </div>
-          <div className="items-container flex gap-3 items-center">
+           {/* infoCardContainer */}
+           <div className="items-container flex gap-3 items-center">
             {/* icon */}
             <div>
               <div className="flex items-center gap-2">
                 <IconHolderPrimary>
-                  <PiStudentBold></PiStudentBold>
+                <FaUserGraduate />
                 </IconHolderPrimary>
               </div>
             </div>
             {/* details */}
             <div>
-              <h1 className="text-color-black font-medium">67.1k</h1>
-              <h3 className="text-color-gray">Students</h3>
-            </div>
-          </div>
-          <div className="items-container flex gap-3 items-center">
-            {/* icon */}
-            <div>
-              <div className="flex items-center gap-2">
-                <IconHolderPrimary>
-                  <PiStudentBold></PiStudentBold>
-                </IconHolderPrimary>
-              </div>
-            </div>
-            {/* details */}
-            <div>
-              <h1 className="text-color-black font-medium">67.1k</h1>
-              <h3 className="text-color-gray">Students</h3>
-            </div>
-          </div>
-          <div className="items-container flex gap-3 items-center">
-            {/* icon */}
-            <div>
-              <div className="flex items-center gap-2">
-                <IconHolderPrimary>
-                  <PiStudentBold></PiStudentBold>
-                </IconHolderPrimary>
-              </div>
-            </div>
-            {/* details */}
-            <div>
-              <h1 className="text-color-black font-medium">67.1k</h1>
-              <h3 className="text-color-gray">Students</h3>
+              <h1 className="text-color-black font-medium">{totalTeacher}</h1>
+              <h3 className="text-color-gray">Instructor</h3>
             </div>
           </div>
         </div>
+        
       </div>
 
       <div className="bg-section-bg py-12">
@@ -140,49 +144,49 @@ const BecomeInstructor = () => {
             <div className="card bg-color-white p-5 flex justify-center items-center flex-col">
               <div className="w-16 h-16 flex  justify-center items-center">
                 <IconHolderPrimary>
-                  <PiStudentBold></PiStudentBold>
+                  <IoDocumentAttach />
                 </IconHolderPrimary>
               </div>
 
               {/* Text Content */}
               <div>
-                <h1 className="text-lg mt-5">1. Apply to become instructor.</h1>
+                <h1 className="text-lg mt-5">Apply</h1>
               </div>
             </div>
             <div className="card bg-color-white p-5 flex justify-center items-center flex-col">
               <div className="w-16 h-16 flex  justify-center items-center">
                 <IconHolderPrimary>
-                  <PiStudentBold></PiStudentBold>
+                  <IoTime />
                 </IconHolderPrimary>
               </div>
 
               {/* Text Content */}
               <div>
-                <h1 className="text-lg mt-5">1. Apply to become instructor.</h1>
+                <h1 className="text-lg mt-5">Wait</h1>
               </div>
             </div>
             <div className="card bg-color-white p-5 flex justify-center items-center flex-col">
               <div className="w-16 h-16 flex  justify-center items-center">
                 <IconHolderPrimary>
-                  <PiStudentBold></PiStudentBold>
+                  <MdClass />
                 </IconHolderPrimary>
               </div>
 
               {/* Text Content */}
               <div>
-                <h1 className="text-lg mt-5">1. Apply to become instructor.</h1>
+                <h1 className="text-lg mt-5">Add Class</h1>
               </div>
             </div>
             <div className="card bg-color-white p-5 flex justify-center items-center flex-col">
               <div className="w-16 h-16 flex  justify-center items-center">
                 <IconHolderPrimary>
-                  <PiStudentBold></PiStudentBold>
+                  <FaMoneyBillTrendUp />
                 </IconHolderPrimary>
               </div>
 
               {/* Text Content */}
               <div>
-                <h1 className="text-lg mt-5">1. Apply to become instructor.</h1>
+                <h1 className="text-lg mt-5">Start Earning</h1>
               </div>
             </div>
           </div>
@@ -208,7 +212,11 @@ const BecomeInstructor = () => {
             </div>
 
             <div className="flex items-center gap-3 w-full bg-gray-100 rounded-lg">
-              <Avatar src={bannerImage} alt={bannerImage} size="md" />
+              <img
+                src={activeUser?.photoURL}
+                alt={activeUser?.displayName}
+                className="rounded-lg h-12 w-12"
+              />
               <div className="flex flex-col">
                 <Typography
                   variant="small"

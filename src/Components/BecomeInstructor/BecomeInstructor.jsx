@@ -31,7 +31,7 @@ const BecomeInstructor = () => {
           </button>
         </div>
         <div className="bottom-0 right-0  absolute ">
-          <img src="https://tuitiontoppers.com/frontassets/assets/images/become-thumb.png" alt="" />
+          <img className="h-[300px]" src="https://tuitiontoppers.com/frontassets/assets/images/become-thumb.png" alt="" />
         </div>
       </div>
       <div className="bg-white p-8 space-y-5">

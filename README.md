@@ -1,6 +1,6 @@
-# Zero Hunger
+# E - Tutor
 
-#### Learn Today is an online learning platform for teachers and student. Teacher can make courses for student while student will be able to access them. (This is client side repo)
+#### E - Tutor is an online learning platform for teachers and student. Teacher can make courses for student while student will be able to access them. (This is client side repo)
 
 - [Server Side Repo](https://github.com/programming-hero-web-course1/b8a12-server-side-CodeWithRashed)
 - [Live Project Link (Firebase)](https://e-tutor-989d6.web.app)

@@ -1,4 +1,3 @@
-
 import {
   Card,
   Typography,
@@ -12,50 +11,34 @@ import {
   Dialog,
   DialogFooter,
 } from "@material-tailwind/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
 
-const TABLE_HEAD = ["Teacher", "Experience", "Title", "Category", "Status", "Action"];
+import { useTeacherData } from "../../Hooks/useTeacherData";
+import { useTeacherCount } from "../../Hooks/useTeacherCount";
 
+const TABLE_HEAD = [
+  "Teacher",
+  "Experience",
+  "Title",
+  "Category",
+  "Status",
+  "Action",
+];
 
 const TeachersRequestTable = () => {
   const [activePage, setActivePage] = useState(1);
+  const perPageItems = 2;
+  let totalItems = 2; // IF DB TEACHER IS NOT FOUND DEFAULT IS 2
+  const { teachersData } = useTeacherData(activePage, perPageItems);
+  const { teachersCount } = useTeacherCount();
   //Getting Database All User from database
   const axiosSecure = useAxiosSecure();
-  const [dbAllUserData, setDbAllUserData] = useState(null);
-  const [dbUserCount, setDbUserCount] = useState(null);
-  const { isLoading, error, refetch } = useQuery({
-    queryKey: ["userData"],
-    queryFn: async () => {
-      try {
-        const responseUserCount = await axiosSecure.get(`/api/get/usersCount`);
-        const response = await axiosSecure.get(
-          `/api/get/users?page=${activePage}&pageSize=2`
-        );
-        const userData = response.data;
-        const userCountData = responseUserCount.data;
-        setDbAllUserData(userData);
-        setDbUserCount(userCountData.length);
-        return userData;
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        throw error; // Rethrow the error to be caught by React Query
-      }
-    },
-  });
- 
-  // refetch table data
-  useEffect(() => {
-    refetch();
-  }, [activePage, refetch]);
 
-  // Handle Table Pagination
-  let totalItems = 2;
-  if (dbUserCount) {
-    totalItems = dbUserCount;
+  if (teachersCount?.length) {
+    totalItems = teachersCount?.length;
   }
-  const perPageItems = 2;
+
   const pagesCount = Math.ceil(parseInt(totalItems) / parseInt(perPageItems));
   const numberOfPages = [...Array(pagesCount).keys()].map((page) => page + 1);
   //Pagination Function
@@ -63,22 +46,27 @@ const TeachersRequestTable = () => {
     setActivePage(index);
   };
 
-
   //Handle Modal or Dialog Open
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpen = () => setIsModalOpen(!isModalOpen);
-  const [currentUserId, setCurrentUserId] = useState(null)
-  const [currentUserName, setCurrentUserName] = useState(null)
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [currentUserName, setCurrentUserName] = useState(null);
 
   //Handle Make a user admin
-  const makeAdmin =() =>{
-    const newData = {role:"Admin"}
-    axiosSecure.patch(`/api/update/user?_id=${currentUserId}`, newData )
-    
-  }
+  const makeTeacher = (state) => {
+    let newData;
+    if (state == "Accepted") {
+      newData = { role: "Teacher", isTeacherRequest: "Accepted" };
+    }
+    if (state == "Rejected") {
+      newData = { role: "User", isTeacherRequest: "Rejected" };
+    }
+
+    axiosSecure.patch(`/api/update/user?_id=${currentUserId}`, newData);
+  };
   return (
     <div className="mt-0 pt-0">
-      {dbUserCount && (
+      {teachersCount?.length && (
         <Card className="h-full w-full shadow-lg border-none">
           <CardBody className="px-0">
             <table className="w-full table-auto text-left">
@@ -101,9 +89,20 @@ const TeachersRequestTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {dbAllUserData?.map(
-                  ({ _id, name,   image, experience, title, category, isTeacherRequest}, index) => {
-                    const isLast = index === dbAllUserData?.length - 1;
+                {teachersData?.map(
+                  (
+                    {
+                      _id,
+                      name,
+                      image,
+                      experience,
+                      title,
+                      category,
+                      isTeacherRequest,
+                    },
+                    index
+                  ) => {
+                    const isLast = index === teachersData?.length - 1;
                     const classes = isLast
                       ? "p-2"
                       : "p-2 border-b border-blue-gray-50";
@@ -161,7 +160,7 @@ const TeachersRequestTable = () => {
                               variant="ghost"
                               value={isTeacherRequest}
                               color={
-                                isTeacherRequest === "Approved"
+                                isTeacherRequest === "Accepted"
                                   ? "green"
                                   : isTeacherRequest === "Pending"
                                   ? "amber"
@@ -172,12 +171,21 @@ const TeachersRequestTable = () => {
                         </td>
 
                         <td className={classes}>
-                          <Tooltip content="Make Admin">
-                          <Button onClick={() =>{
-                            setCurrentUserId(_id)
-                            setCurrentUserName(name)
-                            handleOpen()
-                          }} size="sm">Edit</Button>
+                          <Tooltip content="Make Teacher">
+                            <Button
+                              disabled={
+                                isTeacherRequest == "Accepted" ||
+                                isTeacherRequest == "Rejected"
+                              }
+                              onClick={() => {
+                                setCurrentUserId(_id);
+                                setCurrentUserName(name);
+                                handleOpen();
+                              }}
+                              size="sm"
+                            >
+                              Edit
+                            </Button>
                           </Tooltip>
                         </td>
                       </tr>
@@ -224,31 +232,40 @@ const TeachersRequestTable = () => {
             </Button>
           </CardFooter>
 
-           {/* Dialog */}
-      <Dialog open={isModalOpen} handler={handleOpen} >
-        <p className="text-xl flex-col text-color-black mt-5 flex justify-center items-center text-center">Are you sure! you want to promote <br /><span className="text-color-primary"> {currentUserName}</span> to an admin?</p>
-        
-        <DialogFooter className="flex justify-center items-center gap-5">
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleOpen}
-            className="mr-1 "
-          >
-            <span>Cancel</span>
-          </Button>
-          <Button variant="gradient" color="green" onClick={()=>{
-            handleOpen()
-            makeAdmin()
-            }}>
-            <span>Confirm</span>
-          </Button>
-        </DialogFooter>
-      </Dialog>
+          {/* Dialog */}
+          <Dialog open={isModalOpen} handler={handleOpen}>
+            <p className="text-xl flex-col text-color-black mt-5 flex justify-center items-center text-center">
+              Are you sure! you want to promote <br />
+              <span className="text-color-primary"> {currentUserName}</span> to
+              an Instructor?
+            </p>
+
+            <DialogFooter className="flex justify-center items-center gap-5">
+              <Button
+                variant="text"
+                color="red"
+                onClick={() => {
+                  handleOpen();
+                  makeTeacher("Rejected");
+                }}
+                className="mr-1 "
+              >
+                <span>Reject</span>
+              </Button>
+              <Button
+                variant="gradient"
+                color="green"
+                onClick={() => {
+                  handleOpen();
+                  makeTeacher("Accepted");
+                }}
+              >
+                <span>Confirm</span>
+              </Button>
+            </DialogFooter>
+          </Dialog>
         </Card>
       )}
-
-     
     </div>
   );
 };

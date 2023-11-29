@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 //Material Tailwind Components
 import {
@@ -10,9 +10,6 @@ import {
   ListItemPrefix,
   ListItemSuffix,
   Chip,
-  Dialog,
-  DialogFooter,
-  Button,
   Accordion,
   AccordionHeader,
   AccordionBody,
@@ -27,11 +24,20 @@ import {
 } from "react-icons/fa";
 
 import { MdDashboard, MdInbox, MdManageAccounts } from "react-icons/md";
-
-import { PiDatabaseFill } from "react-icons/pi";
+import { useTeacherCount } from "../../../Hooks/useTeacherCount";
 
 //Functions Components
 export function AdminNav() {
+  const {teachersCount} = useTeacherCount()
+  const [teachersRequestCount , setTeachersRequestCount] = useState(null)
+
+  useEffect(()=>{
+
+    const teachersRequestCount = teachersCount.filter(item => item.isTeacherRequest === "Pending").length
+    setTeachersRequestCount(teachersRequestCount)
+  },[teachersCount])
+
+  console.log(teachersRequestCount)
   const [open, setOpen] = useState(0);
 
   const handleOpenAccordion = (value) => {
@@ -151,10 +157,10 @@ export function AdminNav() {
               Teacher Request
               <ListItemSuffix>
                 <Chip
-                  value="0"
+                  value={teachersRequestCount}
                   size="sm"
                   variant="ghost"
-                  color="blue-gray"
+                  color={teachersRequestCount > 0 ? "red" : "blue-gray"}
                   className="rounded-full"
                 />
               </ListItemSuffix>

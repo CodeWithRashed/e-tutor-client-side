@@ -1,4 +1,12 @@
-import { FaEdit as PencilIcon } from "react-icons/fa";
+// LOCAL FILE IMPORTS
+
+
+
+// IMPORTS FROM REACT
+import { useState } from "react";
+
+
+// IMPORT FOR DEPENDENCIES
 import {
   Card,
   Typography,
@@ -10,54 +18,40 @@ import {
   IconButton,
   Tooltip,
   Dialog,
-  DialogHeader,
-  DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
 
-import { useEffect, useState } from "react";
 
+
+// LOCAL GLOBAL VARIABLE
 const TABLE_HEAD = ["User", "Email", "Role", "Action"];
+
+
+// LOCAL HOOKS IMPORTS
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
+import { useUserCount } from "../../Hooks/useUserCount";
+import { useUserData } from "../../Hooks/useUserData";
+
+
+//MAIN COMPONENT START HERE
 const ManageUsersTable = () => {
-  const [activePage, setActivePage] = useState(1);
-  //Getting Database All User from database
+  //HOOKS DATA
   const axiosSecure = useAxiosSecure();
-  const [dbAllUserData, setDbAllUserData] = useState(null);
-  const [dbUserCount, setDbUserCount] = useState(null);
-  const { isLoading, error, refetch } = useQuery({
-    queryKey: ["userData"],
-    queryFn: async () => {
-      try {
-        const responseUserCount = await axiosSecure.get(`/api/get/usersCount`);
-        const response = await axiosSecure.get(
-          `/api/get/users?page=${activePage}&pageSize=2`
-        );
-        const userData = response.data;
-        const userCountData = responseUserCount.data;
-        setDbAllUserData(userData);
-        setDbUserCount(userCountData.length);
-        return userData;
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        throw error; // Rethrow the error to be caught by React Query
-      }
-    },
-  });
- 
-  // refetch table data
-  useEffect(() => {
-    refetch();
-  }, [activePage, refetch]);
+  const {userCount, refetch} = useUserCount()
+
+  //LOCAL STATES
+  const [activePage, setActivePage] = useState(1);
+  const pageSize = 2;
+  //Getting Database All User from database
+  const {userData} = useUserData(activePage, 2)
+
 
   // Handle Table Pagination
   let totalItems = 2;
-  if (dbUserCount) {
-    totalItems = dbUserCount;
+  if (userCount) {
+    totalItems = userCount;
   }
-  const perPageItems = 2;
-  const pagesCount = Math.ceil(parseInt(totalItems) / parseInt(perPageItems));
+  const pagesCount = Math.ceil(parseInt(totalItems) / parseInt(pageSize));
   const numberOfPages = [...Array(pagesCount).keys()].map((page) => page + 1);
   //Pagination Function
   const setPageIndex = (index) => {
@@ -72,14 +66,14 @@ const ManageUsersTable = () => {
   const [currentUserName, setCurrentUserName] = useState(null)
 
   //Handle Make a user admin
-  const makeAdmin =() =>{
+  const makeAdmin = async () =>{
     const newData = {role:"Admin"}
-    axiosSecure.patch(`/api/update/user?_id=${currentUserId}`, newData )
-    
+    await axiosSecure.patch(`/api/update/user?_id=${currentUserId}`, newData )
+    refetch()
   }
   return (
     <div className="mt-0 pt-0">
-      {dbUserCount && (
+      {userCount && (
         <Card className="h-full w-full shadow-lg border-none">
           <CardBody className="px-0">
             <table className="w-full table-auto text-left">
@@ -102,9 +96,9 @@ const ManageUsersTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {dbAllUserData?.map(
+                {userData?.map(
                   ({ _id, name, email, image, role }, index) => {
-                    const isLast = index === dbAllUserData?.length - 1;
+                    const isLast = index === userData?.length - 1;
                     const classes = isLast
                       ? "p-2"
                       : "p-2 border-b border-blue-gray-50";

@@ -2,12 +2,12 @@ import PropTypes from "prop-types";
 import { FcGoogle } from "react-icons/fc";
 import { GlobalDataContext } from "../../ContextApi/DataContext";
 import { useContext, useState } from "react";
-import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ButtonPrimary } from "../Shared/Buttons";
 import { FaEye } from "react-icons/fa6";
 import { useForm } from "react-hook-form";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { errorToast, successToast } from "../../utils/Toasts";
 
 const Login = ({ setPageToggle }) => {
   const { loginWithEmail, setUserPhoto, googleLogin } = useContext(GlobalDataContext);
@@ -28,30 +28,12 @@ const onSubmit = async (data) => {
   try{
     axiosSecure.post("/jwt", {user: email})
    await loginWithEmail(email, password)
-    toast.success("Login Successful, Redirecting", {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    successToast("Login Successful, Redirecting..")
     setTimeout(() => {
       navigator(location.state ? location.state : "/");
     }, "2000");
   }catch{
-    toast.error("Login failed. Please try again.", {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    errorToast("Login failed. Please try again.")
   }
 
 }
@@ -68,32 +50,14 @@ const onSubmit = async (data) => {
       //Saving Data to Database
       const user = {name:userData?.user?.displayName, email:userData?.user?.email, image:userData?.user?.photoURL, role: "User"}
        axiosSecure.post("/api/add/user", user);
-      toast.success("Login Successful, Redirecting", {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+       successToast("Login Successful, Redirecting..")
 
       setTimeout(() => {
         const redirectPath = location.state ? location.state : "/";
         navigator(redirectPath);
       }, 2000);
     } catch {
-      toast.error("Login failed. Please try again.", {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      errorToast("Login failed. Please try again.")
     }
   };
 

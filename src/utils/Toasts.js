@@ -1,4 +1,4 @@
-const { toast } = require("react-toastify");
+import { toast } from "react-toastify";
 
 export const successToast = (message) => {
     toast.success(message, {

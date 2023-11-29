@@ -1,26 +1,37 @@
+//LOCAL COMPONENTS IMPORTS
 import PageTitle from "../Components/PageTitle/PageTitle";
 import { IconHolderPrimary } from "../Components/Shared/IconHolder";
 import bannerImage from "../assets/instructor-banner.png";
-import { PiStudentBold } from "react-icons/pi";
-import { Typography, Avatar } from "@material-tailwind/react";
-import { useForm } from "react-hook-form";
 import { ButtonPrimary } from "../Components/Shared/Buttons";
+
+//ICONS IMPORTS
+import { PiStudentBold } from "react-icons/pi";
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
+import { HiUserGroup } from "react-icons/hi";
+import { MdClass } from "react-icons/md";
+import { FaUserGraduate } from "react-icons/fa";
+import { IoDocumentAttach, IoTime } from "react-icons/io5";
+
+//REACT AND HOOKS IMPORT
 import { useContext, useEffect, useState } from "react";
 import { GlobalDataContext } from "../ContextApi/DataContext";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
-import { IoDocumentAttach, IoTime } from "react-icons/io5";
-import { MdClass } from "react-icons/md";
-import { FaMoneyBillTrendUp } from "react-icons/fa6";
-import { HiUserGroup } from "react-icons/hi";
+
+// IMPORTS FROM DEPENDENCIES
+import { Typography } from "@material-tailwind/react";
+import { useForm } from "react-hook-form";
 import { Helmet } from "react-helmet";
-import { FaUserGraduate } from "react-icons/fa";
+
+
+//COMPONENTS START FROM HERE
 const BecomeInstructor = () => {
-  const { activeUser } = useContext(GlobalDataContext);
-  const axiosSecure = useAxiosSecure();
-//User Info Count
+//GLOBAL DATA STATES AND HOOKS
+const { activeUser } = useContext(GlobalDataContext);
+const axiosSecure = useAxiosSecure();
+
+//LOCAL FILE STATES
 const [totalTeacher, setTotalTeacher] = useState(0)
 const [totalUser, setTotalUser] = useState(0)
-const [totalStudent, setTotalStudent] = useState(0)
 
 useEffect(  ()=>{
   const getTeacherCount = async () => {
@@ -36,7 +47,7 @@ useEffect(  ()=>{
 
 },[axiosSecure])
 
-
+//HANDLE FROM SUBMIT OR BECOME INSTRUCTOR
   const {
     register,
     handleSubmit,
@@ -44,9 +55,9 @@ useEffect(  ()=>{
   } = useForm();
   const onSubmit = async (data) => {
     const newData = { isTeacherRequest: "Pending", ...data };
-    console.log(activeUser?.email);
     axiosSecure.patch(`/api/update/user?email=${activeUser?.email}`, newData);
   };
+
   return (
     <div>
       <Helmet>

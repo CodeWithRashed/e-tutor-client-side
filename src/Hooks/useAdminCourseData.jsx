@@ -2,19 +2,19 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "./useAxiosPublic";
 
 
-export const useCourseData = (activePage, pageSize) => {
+export const useAdminCourseData = (activePage, pageSize) => {
 const axiosPublic = useAxiosPublic()
   const {
     isLoading,
     error,
     refetch,
-    data: allCourseData,
+    data: adminCourseData,
   } = useQuery({
     queryKey: ["databaseCourseData", activePage, pageSize],
     queryFn: async () => {
       try {
         const response = await axiosPublic.get(
-          `/api/get/courses?page=${activePage}&pageSize=${pageSize}&isApproved=Approved`
+          `/api/get/courses?page=${activePage}&pageSize=${pageSize}`
         );
         const databaseCourseData = response.data;
 
@@ -26,5 +26,5 @@ const axiosPublic = useAxiosPublic()
     },
   });
 
-  return { isLoading, error, refetch, allCourseData };
+  return { isLoading, error, refetch, adminCourseData };
 };

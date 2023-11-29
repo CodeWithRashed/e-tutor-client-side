@@ -1,47 +1,70 @@
 import { useEffect, useState } from "react";
 import CourseCardExtra from "../Components/Card/CourseCardExtra";
 import PageTitle from "../Components/PageTitle/PageTitle";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
+
 import { useCourseData } from "../Hooks/useCourseData";
 import LoadingScreen from "../Components/Shared/LoadingScreen";
+import Pagination from "../Components/Shared/Pagination";
+import { useCourseCount } from "../Hooks/useCourseCount";
 
 const AllClass = () => {
-  // Getting Course Data
-  const axiosSecure = useAxiosSecure();
-  axiosSecure.get("/api/get/courses");
+  const [activePage, setActivePage] = useState(1);
+  const perPageItems = 3;
 
-  const [courseDataCount, setCourseDataCount] = useState(null);
+  const [courseDataCount, setCourseDataCount] = useState(6);
   const [courseData, setCourseData] = useState();
 
   // Getting Approved Course Data
-  const { allCourseData } = useCourseData(1, 10);
+  const { allCourseData, isLoading } = useCourseData(activePage, perPageItems);
+  // Getting Course Data Count
 
-  // Function to filter and set approved course data
-
-  // Use useEffect to run the function after the initial render
+  const { courseCount } = useCourseCount();
   useEffect(() => {
     const getApprovedCourseData = () => {
       if (allCourseData) {
-        const courseDataFiltered = allCourseData.filter(
-          (item) => item.isApproved === "Approved"
-        );
-        setCourseData(courseDataFiltered);
-        setCourseDataCount(courseDataFiltered.length);
+        setCourseData(allCourseData);
+
+        if (courseCount) {
+          const courseCountFiltered = courseCount.filter(
+            (item) => item.isApproved == "Approved"
+          );
+          setCourseDataCount(courseCountFiltered.length);
+        }
       }
     };
     getApprovedCourseData();
-  }, [allCourseData]);
+  }, [allCourseData, courseCount]);
+
   return (
     <div>
       <PageTitle>All Classes</PageTitle>
       <div className="max-w-[1280px] mx-auto px-5 lg:px-10">
         {courseData ? (
-          <div className="grid grid-cols-3 gap-5 mb-16">
-            {courseData.map((singleCourse) => (
-              <div key={singleCourse?._id}>
-                <CourseCardExtra singleCourse={singleCourse}></CourseCardExtra>
+          <div>
+            {isLoading ? (
+              <LoadingScreen></LoadingScreen>
+            ) : (
+              <div className="grid grid-cols-3 gap-5 mb-16">
+                {courseData.map((singleCourse) => (
+                  <div key={singleCourse?._id}>
+                    <CourseCardExtra
+                      singleCourse={singleCourse}
+                    ></CourseCardExtra>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+
+            <div className="w-full my-10 flex justify-center">
+              <Pagination
+                perPageItems={perPageItems}
+                courseDataCount={courseDataCount}
+                setActivePage={setActivePage}
+                activePage={activePage}
+              >
+                {" "}
+              </Pagination>
+            </div>
           </div>
         ) : (
           <div className="flex justify-center items-center w-screen h-[90vh]">

@@ -28,16 +28,23 @@ import { useTeacherCount } from "../../../Hooks/useTeacherCount";
 
 //Functions Components
 export function AdminNav() {
-  const {teachersCount} = useTeacherCount()
-  const [teachersRequestCount , setTeachersRequestCount] = useState(null)
+  const { teachersCount } = useTeacherCount();
+  const [teachersRequestCount, setTeachersRequestCount] = useState(null);
 
-  useEffect(()=>{
+  useEffect(() => {
+    const getTeacherCount = () => {
+      if (teachersCount) {
+        const teachersRequestCount = teachersCount.filter(
+          (item) => item.isTeacherRequest === "Pending"
+        ).length;
+        setTeachersRequestCount(teachersRequestCount);
+      }
+    };
 
-    const teachersRequestCount = teachersCount.filter(item => item.isTeacherRequest === "Pending").length
-    setTeachersRequestCount(teachersRequestCount)
-  },[teachersCount])
+    getTeacherCount();
+  }, [teachersCount]);
 
-  console.log(teachersRequestCount)
+  console.log(teachersRequestCount);
   const [open, setOpen] = useState(0);
 
   const handleOpenAccordion = (value) => {
@@ -108,7 +115,7 @@ export function AdminNav() {
                     <ListItemPrefix>
                       <FaAngleRight strokeWidth={3} className="h-3 w-5" />
                     </ListItemPrefix>
-                    Manage Users 
+                    Manage Users
                   </ListItem>
                 </button>
 

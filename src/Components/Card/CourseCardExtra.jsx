@@ -56,7 +56,7 @@ const CourseCardExtra = (singleCourse) => {
             <div className="flex w-full flex-col gap-0.5">
               <div className="flex flex-col text-xs">
                 <h1> {teacher?.name}</h1>
-                <h1>{teacher?.name}</h1>
+                <h1>{teacher?.title}</h1>
               </div>
             </div>
             </div>

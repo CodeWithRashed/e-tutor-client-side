@@ -31,7 +31,7 @@ console.log(title, thumbnail, teacher, price, description, _id)
       <div className="max-w-[1280px] mx-auto px-5 lg:px-10 py-5">
         <Breadcrumbs className="p-3">
           <p>Course</p>
-          <p>Development</p>
+          <p>Course Details</p>
         </Breadcrumbs>
 
         <div className="grid grid-cols-12 gap-3">
@@ -69,8 +69,8 @@ console.log(title, thumbnail, teacher, price, description, _id)
               <div className="h-[60vh] w-full overflow-hidden">
                 <img
                   className="h-[60vh] w-full object-cover"
-                  src="https://cdn.pixabay.com/photo/2023/11/16/08/44/school-8391795_1280.jpg"
-                  alt=""
+                  src={thumbnail}
+                  alt={title}
                 />
               </div>
               <div>
@@ -104,17 +104,7 @@ console.log(title, thumbnail, teacher, price, description, _id)
                         {/*Course Description */}
                         <div>
                           <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Enim, culpa. Lorem ipsum dolor sit amet
-                            consectetur adipisicing elit. Sint animi eaque
-                            delectus reprehenderit libero, vel iste asperiores
-                            rerum natus debitis.
-                            <br />
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Voluptate asperiores neque excepturi corrupti
-                            ducimus perspiciatis repellat sapiente nam
-                            accusamus, exercitationem expedita voluptas unde
-                            similique explicabo soluta molestias non.
+                          {description}
                           </p>
                         </div>
 
@@ -241,7 +231,7 @@ console.log(title, thumbnail, teacher, price, description, _id)
                 <div className="cart-head px-3">
                   <div className="py-5  flex justify-between">
                     <h1 className="text-2xl">
-                      $12.00{" "}
+                      ${price}
                       <span className="text-base text-color-gray line-through">
                         26$
                       </span>

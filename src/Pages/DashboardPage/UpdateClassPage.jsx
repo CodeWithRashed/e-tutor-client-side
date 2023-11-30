@@ -7,12 +7,16 @@ import { GlobalDataContext } from "../../ContextApi/DataContext";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { MdOutlineAddCircle } from "react-icons/md";
 import { errorToast, successToast } from "../../utils/Toasts";
+import { useLoaderData } from "react-router-dom";
 
 const UpdateClassPage = () => {
+    const singleCourseData = useLoaderData();
   const { activeUser, activeUserId, activeUserRole } =
     useContext(GlobalDataContext);
   const axiosSecure = useAxiosSecure();
   console.log(activeUser, activeUserId);
+
+
 
   //Handle Form Submit
   const {
@@ -22,25 +26,28 @@ const UpdateClassPage = () => {
   } = useForm();
   const onSubmit = async (data) => {
     const title = data.title;
-    const teacher = await activeUserId;
+    const teacher = singleCourseData[0].teacher._id;
     const price = data.price;
-    let thumbnail = null;
+    let thumbnail = singleCourseData[0].thumbnail;
     const description = data.description;
     const duration = await data.duration;
     const level = data.level;
     const language = data.language;
-    const enrollCount = 0;
+    const enrollCount = singleCourseData[0].enrollCount;
     const isApproved = "Pending"
-    const ratting = 0;
+    const rating = singleCourseData[0].rating;
     const email = (await data.email) || (await activeUser?.email);
 
     //Uploading Image to IMAGE_BB
     try {
       const userImage = data.image[0];
       const uploadData = await UploadImage(userImage);
-      thumbnail = uploadData?.data?.data?.display_url;
+      if(uploadData?.data?.data?.display_url){
+
+          thumbnail = uploadData?.data?.data?.display_url ;
+      }
     } catch (error) {
-      console.log(error);
+    //   console.log(error);
     }
 
     const courseData = {
@@ -54,17 +61,18 @@ const UpdateClassPage = () => {
       language,
       enrollCount,
       isApproved,
-      ratting,
+      rating,
      
     };
 
-
+console.log(courseData)
     //Success Message
     try {
-      axiosSecure.post("/api/add/course", courseData);
-     successToast("Course Added, Wait for approval")
+      const response = await axiosSecure.patch(`/api/update/course?_id=${singleCourseData[0]._id}`, courseData);
+     console.log(response)
+     successToast("Course Updated, Wait for approval")
     } catch (error) {
-      errorToast("Course adding failed. Please try again.")
+      errorToast("Course Updating failed. Please try again.")
     }
   };
 
@@ -78,7 +86,7 @@ const UpdateClassPage = () => {
             <div>
               <Typography variant="h6">{activeUser?.displayName}</Typography>
               <Typography variant="small" color="gray" className="font-normal">
-                Web Developer
+               {activeUser?.email}
               </Typography>
             </div>
           </div>
@@ -104,7 +112,8 @@ const UpdateClassPage = () => {
               </label>
               <div className="relative">
                 <input
-                  {...register("title", { required: true })}
+                defaultValue={singleCourseData[0].title}
+                  {...register("title")}
                   placeholder="Course Title..."
                   name="title"
                   type="text"
@@ -117,29 +126,6 @@ const UpdateClassPage = () => {
             </div>
             {/* End Form Group */}
 
-            {/* Form Group Image URL */}
-            <div>
-              <label
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                htmlFor="image"
-              >
-                Upload Course Thumbnail
-              </label>
-              <input
-                {...register("image", { required: true })}
-                className="border-2 w-full rounded-lg file:border-0
-                          !file:bg-gray-100 !file:w-8 !file:h-12 flex justify-center items-center
-                          !file:py-3 file:px-4
-                          dark:file:bg-gray-700 dark:file:text-gray-400"
-                type="file"
-              />
-              {errors.image && (
-                <span className="text-red-500">
-                  Course Thumbnail is required
-                </span>
-              )}
-            </div>
-            {/* End Form Group */}
 
             {/* Form Group price */}
             <div>
@@ -151,7 +137,8 @@ const UpdateClassPage = () => {
               </label>
               <div className="relative">
                 <input
-                  {...register("price", { required: true })}
+                defaultValue={singleCourseData[0].price}
+                  {...register("price")}
                   placeholder="Course Price..."
                   name="price"
                   type="number"
@@ -204,13 +191,12 @@ const UpdateClassPage = () => {
               <div className="relative">
                 <div>
                   <select
-                    {...register("duration", { required: true })}
+                    {...register("duration")}
                     label="Select Experience"
                     className="py-3 px-4 block w-full border-2 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
                   >
-                    <option className="text-gray-400" value="">
-                      Select Duration
-                    </option>
+                 
+                    <option value={singleCourseData[0].duration}>{singleCourseData[0].duration}</option>
                     <option value="3 Month">3 Month</option>
                     <option value="6 Month">6 Month</option>
                     <option value="1 Year">1 Year</option>
@@ -234,13 +220,12 @@ const UpdateClassPage = () => {
               <div className="relative">
                 <div>
                   <select
-                    {...register("level", { required: true })}
+                    {...register("level")}
                     label="Select Level"
                     className="py-3 px-4 block w-full border-2 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
                   >
-                    <option className="text-gray-400" value="">
-                      Select Level
-                    </option>
+                    
+                    <option value={singleCourseData[0].level}>{singleCourseData[0].level}</option>
                     <option value="Beginner">Beginner</option>
                     <option value="Intermediate">Intermediate</option>
                     <option value="Advance">Advance</option>
@@ -268,9 +253,8 @@ const UpdateClassPage = () => {
                     label="Select Language"
                     className="py-3 px-4 block w-full border-2 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
                   >
-                    <option className="text-gray-400" value="">
-                      Select Language
-                    </option>
+           
+                    <option value={singleCourseData[0].language}>{singleCourseData[0].language}</option>
                     <option value="English">English</option>
                     <option value="Bengali">Bengali</option>
                     <option value="Hindi">Hindi</option>
@@ -294,7 +278,7 @@ const UpdateClassPage = () => {
                 <div>
                   <textarea
                    
-                  
+                   defaultValue={singleCourseData[0].description}
                     {...register("description")}
                     type="text"
                     placeholder="Type Here..."
@@ -316,7 +300,7 @@ const UpdateClassPage = () => {
                 className="flex gap-3 w-1/2 text-center  justify-center items-center"
               >
                 <MdOutlineAddCircle />
-                Add Class
+               Update Class
               </Button>
             </div>
           </div>

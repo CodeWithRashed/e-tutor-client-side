@@ -92,10 +92,13 @@ const handleDelete = async () => {
                 navigator(`/dashboard/my-class/${_id}`);
               }}
               disabled={isApproved == "Pending" || isApproved == "Rejected"}
-            >
+              >
               See Details
             </Button>
-            <Button>Edit</Button>
+            <Button onClick={()=>{
+              navigator(`/dashboard/my-class/update/${_id}`);
+              
+            }}>Edit</Button>
             <Button onClick={()=>{
               handleDelete()
             }}>Delete</Button>

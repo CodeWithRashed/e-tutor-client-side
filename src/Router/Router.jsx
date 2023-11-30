@@ -17,6 +17,7 @@ import ManageAllClassPage from "../Pages/DashboardPage/ManageAllClassPage";
 import AddClassPage from "../Pages/DashboardPage/AddClassPage";
 import ManageMyClass from "../Pages/DashboardPage/ManageMyClass";
 import MyClassDetails from "../Pages/DashboardPage/MyClassDetails";
+import UpdateClassPage from "../Pages/DashboardPage/UpdateClassPage";
 
 
 export const router = createBrowserRouter([
@@ -112,7 +113,11 @@ export const router = createBrowserRouter([
         element: <MyClassDetails></MyClassDetails>,
         loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/get/courses?_id=${params.id}` , {credentials: "include"})
       },
-
+      {
+        path: "/dashboard/my-class/update/:id",
+        element: <UpdateClassPage></UpdateClassPage>,
+        loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/get/courses?_id=${params.id}` , {credentials: "include"})
+      },
       // Common Routes
       {
         path: "/dashboard/profile",

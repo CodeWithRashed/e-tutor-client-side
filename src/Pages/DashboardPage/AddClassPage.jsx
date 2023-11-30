@@ -31,7 +31,7 @@ const AddClassPage = () => {
     const language = data.language;
     const enrollCount = 0;
     const isApproved = "Pending"
-    const ratting = 0;
+    const rating = 0;
     const email = (await data.email) || (await activeUser?.email);
 
     //Uploading Image to IMAGE_BB
@@ -54,7 +54,7 @@ const AddClassPage = () => {
       language,
       enrollCount,
       isApproved,
-      ratting,
+      rating,
      
     };
 
@@ -78,7 +78,7 @@ const AddClassPage = () => {
             <div>
               <Typography variant="h6">{activeUser?.displayName}</Typography>
               <Typography variant="small" color="gray" className="font-normal">
-                Web Developer
+               {activeUser?.email}
               </Typography>
             </div>
           </div>

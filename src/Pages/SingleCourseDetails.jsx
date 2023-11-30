@@ -21,8 +21,8 @@ import { useLoaderData } from "react-router-dom";
 
 const SingleCourseDetails = () => {
   const course = useLoaderData();
-  const {_id, thumbnail, description, title, teacher, price, image, enrollCount, duration, level, language, rating} =  course[0]
-console.log(title, thumbnail, teacher, price, description, _id)
+  const {_id, thumbnail, description, title, teacher, price, image, enrollCount, duration, level, language, rating} =  course
+
   return (
     <div>
       <div>

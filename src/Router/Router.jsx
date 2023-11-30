@@ -95,7 +95,7 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/my-enroll-class/:id",
         element: <MyEnrollClassDetails></MyEnrollClassDetails>,
-       
+        
       },
       
       // Teacher Route
@@ -110,6 +110,7 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/my-class/:id",
         element: <MyClassDetails></MyClassDetails>,
+        loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/get/courses?_id=${params.id}` , {credentials: "include"})
       },
 
       // Common Routes

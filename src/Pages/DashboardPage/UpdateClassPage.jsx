@@ -8,7 +8,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { MdOutlineAddCircle } from "react-icons/md";
 import { errorToast, successToast } from "../../utils/Toasts";
 
-const AddClassPage = () => {
+const UpdateClassPage = () => {
   const { activeUser, activeUserId, activeUserRole } =
     useContext(GlobalDataContext);
   const axiosSecure = useAxiosSecure();
@@ -326,4 +326,4 @@ const AddClassPage = () => {
   );
 };
 
-export default AddClassPage;
+export default UpdateClassPage;

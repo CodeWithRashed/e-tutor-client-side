@@ -9,13 +9,27 @@ import {
   Chip,
 } from "@material-tailwind/react";
 import { LabelMain } from "../Shared/Labels";
+import { useNavigate } from "react-router-dom";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { errorToast, successToast } from "../../utils/Toasts";
 
 const TeacherClassCard = (singleCourseData) => {
-  console.log(singleCourseData);
-  const { title, thumbnail, teacher, price, description, _id, isApproved} =
+  const axiosSecure = useAxiosSecure()
+
+  const { title, thumbnail, teacher, price, description, _id, isApproved } =
     singleCourseData.singleCourseData;
 
-  console.log(title, thumbnail, teacher, price, description, _id);
+  const navigator = useNavigate();
+
+const handleDelete = async () => {
+  const response = await axiosSecure.delete(`/api/delete/course?_id=${_id}`)
+  console.log(response)
+  if(response.status == 200){
+    successToast("Course Delete Successful")
+  }else{
+    errorToast("Error Deleting! Try Again")
+  }
+}
 
   return (
     <div>
@@ -73,9 +87,18 @@ const TeacherClassCard = (singleCourseData) => {
         </CardBody>
         <div className="px-3 pb-3 flex items-center justify-center">
           <ButtonGroup size="sm">
-            <Button disabled={isApproved == "Pending" || isApproved == "Rejected"}>See Details</Button>
+            <Button
+              onClick={() => {
+                navigator(`/dashboard/my-class/${_id}`);
+              }}
+              disabled={isApproved == "Pending" || isApproved == "Rejected"}
+            >
+              See Details
+            </Button>
             <Button>Edit</Button>
-            <Button>Delete</Button>
+            <Button onClick={()=>{
+              handleDelete()
+            }}>Delete</Button>
           </ButtonGroup>
         </div>
       </Card>

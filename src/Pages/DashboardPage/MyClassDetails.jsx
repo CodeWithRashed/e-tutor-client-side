@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { ButtonArrow } from "../../Components/Shared/Buttons";
 import {
   Button,
@@ -25,10 +25,12 @@ const MyClassDetails = () => {
   const handleModalOpen = () => {
     setIsModalOpen(!isModalOpen)
   };
- 
+ const navigator = useNavigate()
   const {
     _id,
     enrollCount,
+    thumbnail,
+    title
     } = singleCourseData[0];
 
 
@@ -63,13 +65,22 @@ const onSubmit = async (data) => {
           <TiDocumentAdd className="text-white text-2xl" />
           Add Assignment
         </Button>
-        <Button variant="gradient" className="flex gap-2 items-center ">
+        <Button onClick={()=>{
+          navigator("/dashboard/my-class")
+        }} variant="gradient" className="flex gap-2 items-center ">
           <FaGear className="text-white text-xl" />
           Manage Class
         </Button>
       </div>
       <div className="grid grid-cols-12">
-        <div className="col-span-8"></div>
+        <div className="col-span-8 p-5">
+        <div>
+          <h1 className="text-2xl mb-3">{title}</h1>
+        </div>
+        <div className="">
+          <img className="rounded-lg" src={thumbnail} alt="" />
+        </div>
+        </div>
         <div className="flex text-center flex-col col-span-4 gap-5">
           <Card
             color="gray"
@@ -114,15 +125,14 @@ const onSubmit = async (data) => {
                 color="white"
                 className="font-normal uppercase"
               >
-                standard
+                Todays Assignment
               </Typography>
               <Typography
                 variant="h1"
                 color="white"
                 className="mt-6 flex justify-center gap-1 text-7xl font-normal"
               >
-                <span className="mt-2 text-4xl">$</span>29{" "}
-                <span className="self-end text-4xl">/mo</span>
+                <span className="mt-2 text-4xl">2</span>
               </Typography>
             </CardHeader>
           </Card>
@@ -142,15 +152,14 @@ const onSubmit = async (data) => {
                 color="white"
                 className="font-normal uppercase"
               >
-                standard
+                Total Assignment
               </Typography>
               <Typography
                 variant="h1"
                 color="white"
                 className="mt-6 flex justify-center gap-1 text-7xl font-normal"
               >
-                <span className="mt-2 text-4xl">$</span>29{" "}
-                <span className="self-end text-4xl">/mo</span>
+                <span className="mt-2 text-4xl">20</span>
               </Typography>
             </CardHeader>
           </Card>

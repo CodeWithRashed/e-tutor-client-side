@@ -18,6 +18,7 @@ import AddClassPage from "../Pages/DashboardPage/AddClassPage";
 import ManageMyClass from "../Pages/DashboardPage/ManageMyClass";
 import MyClassDetails from "../Pages/DashboardPage/MyClassDetails";
 import UpdateClassPage from "../Pages/DashboardPage/UpdateClassPage";
+import PaymentPage from "../Pages/PaymentPage";
 
 
 export const router = createBrowserRouter([
@@ -47,23 +48,13 @@ export const router = createBrowserRouter([
         path: "/courses/:id",
         element: <SingleCourseDetails></SingleCourseDetails>,
         loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/get/courses?_id=${params.id}` , {credentials: "include"})
-        // element: <PrivateRoute><FoodDetails></FoodDetails></PrivateRoute>,
-        // loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/get/food/${params.id}`, {credentials: "include"})
+        
       },
-      // {
-      //   path: "/food/manage/:id",
-      //   element: <PrivateRoute><ManageSingleRequest></ManageSingleRequest></PrivateRoute>,
-      //   loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/get/request/${params.id}`)
-      // },
-      // {
-      //   path: "/request/food/manage/:id",
-      //   element: <PrivateRoute><ManageSingleRequest></ManageSingleRequest></PrivateRoute>,
-      //   loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/v1/user/get/request/${params.id}`)
-      // },
-      // {
-      //   path: "/food/update/:id",
-      //   element: <PrivateRoute><UpdateFood></UpdateFood></PrivateRoute>,
-      // }
+      {
+        path: "/courses/payment/:id",
+        element: <PaymentPage></PaymentPage>,
+        loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/get/courses?_id=${params.id}` , {credentials: "include"})
+      }
     ],
   },
   {

@@ -9,7 +9,7 @@ import { useCourseCount } from "../Hooks/useCourseCount";
 
 const AllClass = () => {
   const [activePage, setActivePage] = useState(1);
-  const perPageItems = 3;
+  const perPageItems = 6;
 
   const [courseDataCount, setCourseDataCount] = useState(6);
   const [courseData, setCourseData] = useState();

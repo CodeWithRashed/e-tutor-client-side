@@ -4,11 +4,17 @@ import "swiper/css/pagination";
 import { Pagination } from "swiper/modules";
 import CourseCard from "../Card/CourseCard";
 import SectionTitle from "../SectionTitle/SectionTitle";
+import LoadingScreen from "../Shared/LoadingScreen";
+import { useCourseData } from "../../Hooks/useCourseData";
 
 const FeatureSlider = () => {
+  const { allCourseData, isLoading } = useCourseData(1, 8);
+  console.log("FeatureSlider", allCourseData)
   return (
     <div>
         <SectionTitle title="Popular Courses" subtitle="Courses you may like!"></SectionTitle>
+        {
+          isLoading ? <LoadingScreen></LoadingScreen> : 
       <Swiper
         slidesPerView={1}
         spaceBetween={10}
@@ -40,30 +46,26 @@ const FeatureSlider = () => {
           
       }}
       >
-       
-        <SwiperSlide className="w-full">
-         <CourseCard></CourseCard>
-        </SwiperSlide>
-        <SwiperSlide className="w-full">
-         <CourseCard></CourseCard>
-        </SwiperSlide>
-        <SwiperSlide className="w-full">
-         <CourseCard></CourseCard>
-        </SwiperSlide>
-        <SwiperSlide className="w-full">
-         <CourseCard></CourseCard>
-        </SwiperSlide>
-        <SwiperSlide className="w-full">
-         <CourseCard></CourseCard>
-        </SwiperSlide>
-        <SwiperSlide className="w-full">
-         <CourseCard></CourseCard>
-        </SwiperSlide>
+       {
+        allCourseData && <div>
+          <div>
+{
+  allCourseData.map((courseData, index) => (
+    <div key={index}>
+<SwiperSlide  className="w-full">
+        <CourseCard courseData={courseData}></CourseCard>
+       </SwiperSlide>
+    </div>
+  ))
+}
 
-        <SwiperSlide className="w-full">
-         <CourseCard></CourseCard>
-        </SwiperSlide>
+          </div>
+        </div> 
+       }
+       
+      
       </Swiper>
+        }
     </div>
   );
 };

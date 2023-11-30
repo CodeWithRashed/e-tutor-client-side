@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useContext } from "react"
 import { GlobalDataContext } from "../ContextApi/DataContext";
 import { Navigate, useLocation } from "react-router-dom"
+import LoadingScreen from '../Components/Shared/LoadingScreen';
 
 
 const PrivateRoute = ({children}) => {
@@ -10,7 +11,7 @@ const PrivateRoute = ({children}) => {
 
  
 if(loading){
-   return <div  className="animate-spin" > O </div>
+   return <div  className="animate-spin" > <LoadingScreen></LoadingScreen> </div>
 }
 
  if(activeUser){

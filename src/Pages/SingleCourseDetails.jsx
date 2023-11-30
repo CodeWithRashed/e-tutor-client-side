@@ -17,7 +17,7 @@ import { LabelMain } from "../Components/Shared/Labels";
 import { FaDollarSign, FaUserFriends, FaSwatchbook } from "react-icons/fa";
 import { AiOutlineGlobal } from "react-icons/ai";
 import { ButtonLoading } from "../Components/Shared/Buttons";
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 
 const SingleCourseDetails = () => {
   const course = useLoaderData();
@@ -293,7 +293,9 @@ const SingleCourseDetails = () => {
 
                 {/* cart footer */}
                 <div className="mt-3">
+                  <Link to={`/courses/payment/${_id}`}>
                   <ButtonLoading isLoading={false}>Buy Now</ButtonLoading>
+                  </Link>
                 </div>
               </div>
               <hr className="my-3" />

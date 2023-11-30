@@ -46,29 +46,29 @@ export const router = createBrowserRouter([
       },
       {
         path: "/courses/:id",
-        element: <SingleCourseDetails></SingleCourseDetails>,
+        element: <PrivateRoute><SingleCourseDetails></SingleCourseDetails></PrivateRoute> ,
         loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/get/courses?_id=${params.id}` , {credentials: "include"})
         
       },
       {
         path: "/courses/payment/:id",
-        element: <PaymentPage></PaymentPage>,
+        element: <PrivateRoute><PaymentPage></PaymentPage></PrivateRoute>,
         loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/get/courses?_id=${params.id}` , {credentials: "include"})
       }
     ],
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout></DashboardLayout>,
+    element: <PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
     children: [
       // Admin Routes
       {
         path: "/dashboard/manage-users",
-        element: <ManageUsers></ManageUsers>,
+        element: <PrivateRoute><ManageUsers></ManageUsers></PrivateRoute>,
       },
       {
         path: "/dashboard/manage-classes",
-        element: <ManageAllClassPage></ManageAllClassPage>,
+        element: <PrivateRoute><ManageAllClassPage></ManageAllClassPage></PrivateRoute>,
       },
       {
         path: "/dashboard/orders",
@@ -76,43 +76,43 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/teachers-request",
-        element: <TeachersRequest></TeachersRequest>,
+        element: <PrivateRoute><TeachersRequest></TeachersRequest></PrivateRoute>,
       },
       
       //Student Route
       {
         path: "/dashboard/my-enroll-class",
-        element: <MyEnrollClass></MyEnrollClass>,
+        element:  <PrivateRoute><MyEnrollClass></MyEnrollClass></PrivateRoute>,
       },
       {
         path: "/dashboard/my-enroll-class/:id",
-        element: <MyEnrollClassDetails></MyEnrollClassDetails>,
+        element: <PrivateRoute><MyEnrollClassDetails></MyEnrollClassDetails></PrivateRoute>,
         
       },
       
       // Teacher Route
       {
         path: "/dashboard/add-class",
-        element: <AddClassPage></AddClassPage>,
+        element: <PrivateRoute><AddClassPage></AddClassPage></PrivateRoute>,
       },
       {
         path: "/dashboard/my-class",
-        element: <ManageMyClass></ManageMyClass>,
+        element: <PrivateRoute><ManageMyClass></ManageMyClass></PrivateRoute>,
       },
       {
         path: "/dashboard/my-class/:id",
-        element: <MyClassDetails></MyClassDetails>,
+        element: <PrivateRoute><MyClassDetails></MyClassDetails></PrivateRoute>,
         loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/get/courses?_id=${params.id}` , {credentials: "include"})
       },
       {
         path: "/dashboard/my-class/update/:id",
-        element: <UpdateClassPage></UpdateClassPage>,
+        element: <PrivateRoute><UpdateClassPage></UpdateClassPage></PrivateRoute>,
         loader: ({params})=> fetch(`${import.meta.env.VITE_BACKEND_API}/api/get/courses?_id=${params.id}` , {credentials: "include"})
       },
       // Common Routes
       {
         path: "/dashboard/profile",
-        element: <Profile></Profile>,
+        element: <PrivateRoute><Profile></Profile></PrivateRoute>,
       },
     ],
   },

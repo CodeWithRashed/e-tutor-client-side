@@ -6,11 +6,12 @@ import {
   Avatar,
 } from "@material-tailwind/react";
 import { ButtonPrimary } from "../Shared/Buttons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const CourseCardExtra = (singleCourse) => {
   const {title, thumbnail, teacher, price, description, _id} = singleCourse.singleCourse
   console.log(singleCourse)
+  const navigator = useNavigate()
 
   return (
     <div>
@@ -64,7 +65,7 @@ const CourseCardExtra = (singleCourse) => {
             
               <Link to={`/courses/${_id}`}>
                 
-              <ButtonPrimary>Enroll</ButtonPrimary>
+              <ButtonPrimary  >Enroll</ButtonPrimary>
                 
                 </Link>
             

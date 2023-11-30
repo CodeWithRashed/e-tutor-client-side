@@ -68,7 +68,6 @@ export const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <DashboardLayout></DashboardLayout>,
-    errorElement: <Error404></Error404>,
     children: [
       // Admin Routes
       {
@@ -87,6 +86,7 @@ export const router = createBrowserRouter([
         path: "/dashboard/teachers-request",
         element: <TeachersRequest></TeachersRequest>,
       },
+      
       //Student Route
       {
         path: "/dashboard/my-enroll-class",

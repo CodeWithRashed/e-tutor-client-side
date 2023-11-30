@@ -1,37 +1,19 @@
 import { Avatar, Typography } from "@material-tailwind/react";
-import { ButtonArrow, ButtonLoading } from "../../Components/Shared/Buttons";
+import { ButtonArrow } from "../../Components/Shared/Buttons";
 import { toast } from "react-toastify";
 import { UploadImage } from "../../utils/ImageUpload";
 import { useForm } from "react-hook-form";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GlobalDataContext } from "../../ContextApi/DataContext";
-import useAxiosSecure from "../../Hooks/useAxiosSecure";
+
 
 const Profile = () => {
   const navigator = useNavigate();
-  const { activeUser } = useContext(GlobalDataContext);
+  const { activeUser, activeUserRole } = useContext(GlobalDataContext);
   const [isDisable, setIsDisable] = useState(true);
-  //Getting Database User
-  const axiosSecure = useAxiosSecure();
-  const [dbUserData, setDbUserData] = useState(null);
-  useEffect(() => {
-    const fetchData = async () => {
-      if (activeUser?.email) {
-        try {
-          const userEmail = activeUser.email;
-          const response = await axiosSecure.get(
-            `/api/get/user?email=${userEmail}`
-          );
-          setDbUserData(response.data[0]);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      }
-    };
 
-    fetchData();
-  }, [activeUser, axiosSecure]);
+
   //Handle Form Submit
   const {
     register,
@@ -103,7 +85,7 @@ const Profile = () => {
             </div>
           </div>
           <div>
-            {dbUserData?.role == "User" && (
+            {activeUserRole == "User" && (
               <button
                 onClick={() => {
                   navigator("/become-instructor");
@@ -155,7 +137,7 @@ const Profile = () => {
               <div className="relative">
                 <input
                   disabled={true}
-                  defaultValue={dbUserData?.role}
+                  defaultValue={activeUserRole}
                   {...register("role", { required: true })}
                  
                   name="role"

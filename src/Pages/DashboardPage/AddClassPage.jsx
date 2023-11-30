@@ -1,21 +1,18 @@
-import { Avatar, Typography } from "@material-tailwind/react";
+import { Avatar, Button, Typography } from "@material-tailwind/react";
 import { ButtonArrow } from "../../Components/Shared/Buttons";
 import { toast } from "react-toastify";
 import { UploadImage } from "../../utils/ImageUpload";
 import { useForm } from "react-hook-form";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { GlobalDataContext } from "../../ContextApi/DataContext";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-
-
+import { MdOutlineAddCircle } from "react-icons/md";
 
 const AddClassPage = () => {
-  const [isDisable, setIsDisable] = useState(true);
-  const { activeUser, dbUserData } = useContext(GlobalDataContext);
+  const { activeUser, activeUserId, activeUserRole } =
+    useContext(GlobalDataContext);
   const axiosSecure = useAxiosSecure();
-  console.log(activeUser, dbUserData);
-
-  
+  console.log(activeUser, activeUserId);
 
   //Handle Form Submit
   const {
@@ -25,7 +22,7 @@ const AddClassPage = () => {
   } = useForm();
   const onSubmit = async (data) => {
     const title = data.title;
-    const teacher = await dbUserData?._id;
+    const teacher = await activeUserId;
     const price = data.price;
     let thumbnail = null;
     const description = "Abcd";
@@ -34,7 +31,7 @@ const AddClassPage = () => {
     const language = data.language;
     const enrollCount = 0;
     const ratting = 0;
-    const email = await data.email || await activeUser?.email;
+    const email = (await data.email) || (await activeUser?.email);
 
     //Uploading Image to IMAGE_BB
     try {
@@ -61,8 +58,8 @@ const AddClassPage = () => {
     console.log(courseData);
 
     //Success Message
-        try {
-          axiosSecure.post("/api/add/course", courseData)
+    try {
+      axiosSecure.post("/api/add/course", courseData);
       toast.success("Course Added, Wait for approval", {
         position: "top-center",
         autoClose: 2000,
@@ -73,7 +70,6 @@ const AddClassPage = () => {
         progress: undefined,
         theme: "light",
       });
-      
     } catch (error) {
       toast.error("Course adding failed. Please try again.", {
         position: "top-center",
@@ -103,7 +99,9 @@ const AddClassPage = () => {
             </div>
           </div>
           <div>
-            <ButtonArrow>Become Instructor</ButtonArrow>
+            {activeUserRole == "User" && (
+              <ButtonArrow>Become Instructor</ButtonArrow>
+            )}
           </div>
         </div>
       </div>
@@ -299,18 +297,16 @@ const AddClassPage = () => {
               </div>
             </div>
             {/* End Form Group */}
-
-            <button
-              disabled={false}
-              type="submit"
-              className={` ${
-                isDisable
-                  ? "bg-blue-gray-200 text-gray-500  px-2 py-2 rounded-lg font-bold"
-                  : "text-color-white bg-color-primary px-2 py-2 rounded-lg font-bold"
-              }`}
-            >
-              Update
-            </button>
+            <div className="flex justify-center items-center">
+              <Button
+                disabled={activeUserRole == "Admin" || activeUserRole == "User"}
+                type="submit"
+                className="flex gap-3 w-1/2 text-center  justify-center items-center"
+              >
+                <MdOutlineAddCircle />
+                Add Class
+              </Button>
+            </div>
           </div>
         </form>
       </div>

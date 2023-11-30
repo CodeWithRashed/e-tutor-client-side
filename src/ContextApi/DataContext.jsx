@@ -17,8 +17,7 @@ const provider = new GoogleAuthProvider();
 //Firebase Auth
 import { auth } from "../Config/FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import useAxiosSecure from "../Hooks/useAxiosSecure";
-import { useQuery } from "@tanstack/react-query";
+import { getUserRole } from "../Hooks/getUserRole";
 
 //Data Context Components
 const DataContext = ({ children }) => {
@@ -26,23 +25,11 @@ const DataContext = ({ children }) => {
   const [activeUser, setActiveUser] = useState(null);
   const [userPhoto, setUserPhoto] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeUserRole, setActiveUserRole] = useState(null);
+  const [activeUserId, setActiveUserId] = useState(null);
 
 
-  //Getting Database User
-  const axiosSecure = useAxiosSecure();
-  const [dbUserData, setDbUserData] = useState(null);
 
-  const { isLoading, error, refetch } = useQuery({
-    queryKey: ["user"],
-    queryFn: async () => {
-      const response = await axiosSecure.get(
-        `/api/get/user?email=${activeUser?.email}`
-      );
-      const userData = await response.data[0]
-      setDbUserData(userData);
-      return response.data;
-    },
-  });
   //Create User Email & Pass Func
   const createEmailUser = (email, password) => {
     return createUserWithEmailAndPassword(auth, email, password);
@@ -75,15 +62,24 @@ const DataContext = ({ children }) => {
 
   // onAuthStateChange
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, currentUser => {
-      setActiveUser(currentUser)
-      setLoading(false)
-    })
-    return () => {
-      return unsubscribe()
-    }
-  }, [])
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setActiveUser(currentUser);
+      //get user role
+      const getUserRoleData = async (email) => {
+        const result = await getUserRole(email);
+        setActiveUserRole(result?.role);
+        setActiveUserId(result?._id);
+      };
 
+      getUserRoleData(currentUser.email);
+      setLoading(false);
+    });
+    return () => {
+      return unsubscribe();
+    };
+  }, []);
+  
+  console.log("user role result", activeUserRole, activeUserId);
   //Global Data Export
   const globalDataVariable = {
     createEmailUser,
@@ -95,7 +91,8 @@ const DataContext = ({ children }) => {
     setUserPhoto,
     userPhoto,
     loading,
-    dbUserData
+    activeUserId,
+    activeUserRole
   };
   return (
     <GlobalDataContext.Provider value={globalDataVariable}>
